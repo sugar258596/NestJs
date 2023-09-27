@@ -30,15 +30,18 @@ export class UserController {
 
   }
 
+  @Post('adduser')
+  createAdd(@Body() Body) {
+    return this.userService.addUser(Body)
+  }
+
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
     return this.userService.create(createUserDto);
   }
 
   @Get()
   findAll(@Query() req) {
-    console.log(req);
     return this.userService.findAll();
   }
 

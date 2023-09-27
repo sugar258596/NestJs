@@ -2,9 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as svgCaptcha from 'svg-captcha'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Test } from '../test/entities/test.entity'
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class UserService {
+  constructor(@InjectRepository(Test) private readonly test: Repository<Test>) { }
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
@@ -37,6 +41,14 @@ export class UserService {
       noise: noise || 3,//干扰线的数量
     };
     return svgCaptcha.create(options);
+  }
+
+  // 添加用户
+  addUser(createUserDto: Test) {
+    const data = new Test()
+    data.name = createUserDto.name
+    data.password = createUserDto.password
+    return this.test.save(data)
   }
 
 }
