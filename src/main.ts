@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as session from 'express-session'
-
+import { Response } from './common/response.interceptor'
 const post: number = 3000;
 
 async function bootstrap() {
@@ -16,7 +16,7 @@ async function bootstrap() {
       maxAge: 60 * 60 * 24
     }
   }))
-
+  app.useGlobalInterceptors(new Response())
 
   await app.listen(post);
 }
