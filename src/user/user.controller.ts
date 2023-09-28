@@ -47,8 +47,6 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id') id: string, @Headers() Header) {
-    console.log(id, Header);
-
     return this.userService.findOne(+id);
   }
 

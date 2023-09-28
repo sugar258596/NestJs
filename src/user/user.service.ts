@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as svgCaptcha from 'svg-captcha'
@@ -44,11 +44,17 @@ export class UserService {
   }
 
   // 添加用户
-  addUser(createUserDto: Test) {
+  async addUser(createUserDto: Test) {
     const data = new Test()
     data.name = createUserDto.name
     data.password = createUserDto.password
-    return this.test.save(data)
+
+    try {
+      await this.test.save(data)
+      return '用户已添加成功';
+    } catch {
+      throw new HttpException('添加用户失败', HttpStatus.BAD_REQUEST);
+    }
   }
 
 }
