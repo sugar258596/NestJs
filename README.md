@@ -78,16 +78,17 @@ import { VersioningType } from '@nestjs/common';
 
 ### Code 码规范
 
-| Code码 | 英文                  | 中文                         |
-| ------ | --------------------- | ---------------------------- |
-| 200    | ok                    | 成功                         |
-| 304    | Not Modified          | 协商缓存了                   |
-| 400    | Bad Request           | 参数错误                     |
-| 401    | Unauthorized          | token错误                    |
-| 403    | Forbidden             | referer origin 验证失败      |
-| 404    | Not Found             | 接口不存在                   |
-| 500    | Internal Server Error | 服务端错误                   |
-| 502    | Bad Gateway           | 上游接口有问题或者服务器问题 |
+| Code码 | 英文                  | 中文                                   |
+| ------ | --------------------- | -------------------------------------- |
+| 200    | ok                    | 请求成功，服务器正常处理并返回数据     |
+| 304    | Not Modified          | 客户端缓存的资源为最新，不需要重新下载 |
+| 400    | Bad Request           | 服务器无法理解请求的格式               |
+| 401    | Unauthorized          | 请求未经授权，需要身份验证             |
+| 403    | Forbidden             | 服务器拒绝服务 ，没有访问权限          |
+| 404    | Not Found             | 请求资源不存在                         |
+| 500    | Internal Server Error | 服务端错误                             |
+| 502    | Bad Gateway           | 上游接口有问题或者服务器问题           |
+| 503    | Service Unavailable   | 通常是由于过载或维护                   |
 
 ### 方法装饰器
 

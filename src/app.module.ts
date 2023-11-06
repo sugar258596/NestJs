@@ -1,14 +1,22 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module ,ValidationPipe} from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import MYSQl from './mysql/mysl.config';
+import { UserModule } from './user/user.module';
+import { APP_INTERCEPTOR, APP_FILTER} from '@nestjs/core';
+import { Response } from './common/response.interceptor';
+import { HttpFilter } from './common/filter';
+
 @Module({
-  controllers: [AppController],
-  providers: [AppService],
-  imports: [UserModule,
-    TypeOrmModule.forRoot(MYSQl),
+  imports: [TypeOrmModule.forRoot(MYSQl), UserModule],
+  providers: [
+    { // 响应拦截器注册
+      provide: APP_INTERCEPTOR,
+      useClass: Response,
+    },
+    { //错误拦截器注册
+      provide: APP_FILTER,
+      useClass: HttpFilter,
+    },
   ],
 })
-export class AppModule { }
+export class AppModule {}

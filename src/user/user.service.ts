@@ -5,6 +5,7 @@ import * as svgCaptcha from 'svg-captcha'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Test } from '../test/entities/test.entity'
 import { Repository } from 'typeorm'
+import { log } from 'console';
 
 @Injectable()
 export class UserService {
@@ -48,9 +49,15 @@ export class UserService {
     const data = new Test()
     data.name = createUserDto.name
     data.password = createUserDto.password
+    console.log('data=======>',data);
+    
 
     try {
-      await this.test.save(data)
+      let a = await this.test.save(data)
+      console.log(a);
+
+
+
       return '用户已添加成功';
     } catch {
       throw new HttpException('添加用户失败', HttpStatus.BAD_REQUEST);
