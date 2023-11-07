@@ -1,3 +1,50 @@
 {
-    "nuxt.isNuxtApp": false
+    "security.workspace.trust.untrustedFiles": "open",
+    "editor.fontSize": 15,
+    "[vue]": {
+        "editor.defaultFormatter": "Vue.volar"
+    },
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.colorTheme": "One Dark Pro Darker",
+    "editor.mouseWheelZoom": true,
+    "editor.wordWrap": "on",
+    // ESlint插件+Vscode配置，实现自动格式化修复
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    },
+    // 关闭实现自动化格式
+    "editor.formatOnSave": true,
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "typescript.locale": "zh-CN",
+    "backgroundCover.imagePath": "d:\\wallhaven-7p3wdv.jpg",
+    "workbench.editor.empty.hint": "hidden",
+    "open-in-browser.default": "Google Chrome",
+    "eslint.codeAction.disableRuleComment": {
+        "enable": false
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "files.trimFinalNewlines": true,
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "*.ts": "$(capture).test.ts, $(capture).test.tsx",
+        "*.tsx": "$(capture).test.ts, $(capture).test.tsx",
+        "package.json": "pnpm-lock.yaml,pnpm-workspace.yaml,LICENSE,.gitattributes,.gitignore,.gitpod.yml,CNAME,README*,.npmrc,.browserslistrc",
+        ".eslintrc.js": ".eslintignore,.prettierignore,.stylelintignore,.commitlintrc.js,.prettierrc.js,.stylelintrc.js",
+        "*.env": "$(capture).env.*",
+        "CHANGELOG.md": "CHANGELOG*"
+    },
+    "search.exclude": {
+        "\"**/*.log*": true,
+        "**/.git": true,
+        "**/*.log": true,
+        "**/dist": true
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "settingsSync.ignoredSettings": []
 }
