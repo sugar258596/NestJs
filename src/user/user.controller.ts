@@ -1,18 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req, Query, Headers, Session} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req, Query, Headers, Session } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import type { Request, Response } from 'express'
 import {ApiTags, ApiResponse, ApiBody,ApiProperty} from '@nestjs/swagger'
- 
-class Text {
-  @ApiProperty({ example: 'John Doe', description: 'The name of the user' })
-  name: string;
-
-  @ApiProperty({ example: 'password123', description: 'The password of the user' })
-  password: string;
-}
-
 
 @Controller('user')
 @ApiTags('user')
@@ -52,10 +43,12 @@ export class UserController {
   }
 
   @Post('adduser')
-  @ApiBody({ type: Text })
-  @ApiResponse({ status: 200, description: 'OK',schema:{ type: 'ok'}})
-  @ApiResponse({ status: 404, description: 'User not found' })
-  createAdd(@Body() Body) {
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({ status: 200, description: 'OK'})
+  @ApiResponse({ status: 404, description: 'User not found'})
+  createAdd(@Body() Body:UpdateUserDto) {
+    console.log('Body',Body);
+  
     return this.userService.addUser(Body)
   }
 
@@ -68,7 +61,7 @@ export class UserController {
   findAll(@Query() req) {
     return this.userService.findAll();
   }
-
+A
   @Get(':id')
   findOne(@Param('id') id: string, @Headers() Header) {
     return this.userService.findOne(+id);

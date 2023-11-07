@@ -17,7 +17,6 @@ import { Veriofy } from 'src/veriofy';
       provide: UserService,
       useClass: UserService,
     },
- 
   ],
 })
 export class UserModule implements NestModule {

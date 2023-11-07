@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { Module ,ValidationPipe} from '@nestjs/common';
 import * as session from 'express-session';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -27,7 +28,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
-
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(post);
 }
 bootstrap();

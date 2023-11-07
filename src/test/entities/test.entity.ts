@@ -33,7 +33,7 @@ export class Test {
     @PrimaryGeneratedColumn({
         comment: 'id'
     })
-    id: number
+    id?: number
 
     @Column({
         comment: '昵称'
@@ -50,12 +50,12 @@ export class Test {
         type: 'timestamp',
         comment: '创建时间'
     })
-    newData: string
+    newData?: string
 
     @UpdateDateColumn({
         comment: '数据更新'
     })
-    upData: string
+    upData?: string
 
     @Column({
         type: 'enum',
@@ -63,7 +63,7 @@ export class Test {
         default: Static.ok,
         comment: '状态'
     })
-    static: number
+    static?: number
 
 
 }

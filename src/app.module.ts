@@ -2,7 +2,7 @@ import { Module ,ValidationPipe} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import MYSQl from './mysql/mysl.config';
 import { UserModule } from './user/user.module';
-import { APP_INTERCEPTOR, APP_FILTER} from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_FILTER,APP_PIPE} from '@nestjs/core';
 import { Response } from './common/response.interceptor';
 import { HttpFilter } from './common/filter';
 
@@ -17,6 +17,7 @@ import { HttpFilter } from './common/filter';
       provide: APP_FILTER,
       useClass: HttpFilter,
     },
+  
   ],
 })
 export class AppModule {}
