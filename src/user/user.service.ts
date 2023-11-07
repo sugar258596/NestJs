@@ -33,23 +33,37 @@ export class UserService {
 
   // 生成验证码图片
   getCode(
-    size?: number,
-    noise?: number,
-    fontSize?: number,
-    width?: number,
-    height?: number,
-    bg?: string,
+    size: number = 4,
+    noise: number = 4,
+    fontSize: number = 50,
+    width: number = 100,
+    height: number = 48,
+    bg: string = '#1f2437',
   ) {
     const options = {
-      size: size || 4, //验证码长度
-      fontSize: fontSize || 50, // 验证码文本的字体大小
+      size: size, //验证码长度
+      fontSize: fontSize, // 验证码文本的字体大小
       color: true,
-      width: width || 100,
-      height: height || 48,
-      background: bg || '#1f2437', //验证码图片的背景颜色
-      noise: noise || 3, //干扰线的数量
+      width: width,
+      height: height,
+      background: bg, //验证码图片的背景颜色
+      noise: noise, //干扰线的数量
     };
     return svgCaptcha.create(options);
+  }
+  createuser(Body, session) {
+    if (!session.code) {
+      throw new HttpException('验证失败', HttpStatus.BAD_REQUEST);
+    }
+
+    if (session.code.toLocaleLowerCase() === Body.code.toLocaleLowerCase()) {
+      return {
+        code: 200,
+        message: '验证成功',
+      };
+    } else {
+      throw new HttpException('验证失败', HttpStatus.BAD_REQUEST);
+    }
   }
 
   // 添加用户

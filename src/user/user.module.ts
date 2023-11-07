@@ -21,6 +21,6 @@ import { Veriofy } from 'src/veriofy';
 })
 export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(Veriofy).forRoutes();
+    consumer.apply(Veriofy).forRoutes('user');
   }
 }

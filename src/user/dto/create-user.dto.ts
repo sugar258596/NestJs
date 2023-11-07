@@ -16,7 +16,4 @@ export class CreateUserDto {
     maxLength: 22,
   })
   password: string;
-
-  @ApiProperty({ required: false, description: '年龄' })
-  age: number;
 }

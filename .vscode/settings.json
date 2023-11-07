@@ -6,7 +6,7 @@
     },
     "workbench.iconTheme": "vscode-icons",
     "workbench.colorTheme": "One Dark Pro Darker",
-    "editor.mouseWheelZoom": true,
+    "editor.mouseWheelZoom": false,
     "editor.wordWrap": "on",
     // ESlint插件+Vscode配置，实现自动格式化修复
     "editor.codeActionsOnSave": {

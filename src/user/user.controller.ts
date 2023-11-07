@@ -16,7 +16,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import type { Request, Response } from 'express';
-import { ApiTags, ApiResponse, ApiBody, ApiProperty } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiBody, ApiOperation } from '@nestjs/swagger';
 
 @Controller('user')
 @ApiTags('user')
@@ -33,30 +33,16 @@ export class UserController {
   @Post('create')
   createuser(@Body() Body, @Session() session) {
     console.log('session.code', session.code);
-
-    if (!session.code) {
-      return {
-        code: 401,
-        message: '验证错误',
-      };
-    }
-
-    if (session.code.toLocaleLowerCase() === Body.code.toLocaleLowerCase()) {
-      return {
-        code: 200,
-        message: '验证成功',
-      };
-    } else {
-      return {
-        code: 401,
-        message: '验证错误',
-      };
-    }
+    return this.userService.createuser(Body, session);
   }
 
   @Post('adduser')
   @ApiBody({ type: CreateUserDto })
-  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiOperation({
+    summary: '添加用户',
+    description: '用于用户添加',
+  })
+  @ApiResponse({ status: 200, description: 'Success' })
   @ApiResponse({ status: 404, description: 'User not found' })
   createAdd(@Body() Body: UpdateUserDto) {
     return this.userService.addUser(Body);
