@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Test } from '../test/entities/test.entity';
+import { User } from './entities/user.entity';
 import { Veriofy } from 'src/veriofy';
 
 /**
@@ -10,7 +10,7 @@ import { Veriofy } from 'src/veriofy';
  */
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Test])],
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UserController],
   providers: [
     {

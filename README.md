@@ -31,33 +31,33 @@
 
 ### NestJs 常用命令:
 
-| 命令名称                    | 简写   | 说明                              |
-| --------------------------- | ------ | --------------------------------- |
-| new <name> [path]           |        | 创建一个新的 Nest 应用            |
-| build                       |        | 构建 Nest 应用                    |
-| start                       |        | 启动已构建的 Nest 应用            |
-| generate <schematic> [name] |        | 生成代码文件                      |
-| add <schematic> [name]      |        | 添加特性或库到现有的 Nest 应用    |
-| update                      |        | 更新 Nest CLI                     |
-| info                        |        | 输出关于系统环境的诊断信息        |
-| ——————————————————————————  | —————— | ————————————————————————————————— |
-| class                       | cl     | 生成一个类文件                    |
-| configuration               | config | 生成CLI配置文件                   |
-| controller                  | co     | 生成一个控制器文件                |
-| decorator                   | de     | 生成一个装饰器文件                |
-| filter                      | f      | 生成一个过滤器文件                |
-| gateway                     | ga     | 生成一个网关文件                  |
-| guard                       | gu     | 生成一个守卫文件                  |
-| interceptor                 | itc    | 生成一个拦截器文件                |
-| library                     | lib    | 生成一个在monorep的新库           |
-| interface                   | itf    | 生成一个接口文件                  |
-| middleware                  | mi     | 生成一个中间件文件                |
-| module                      | mo     | 生成一个模块文件                  |
-| pipe                        | pi     | 生成一个管道文件                  |
-| provider                    | pr     | 生成一个提供者文件                |
-| resolver                    | r      | 生成一个解析器文件                |
-| resource                    | res    | 生成一个新的CRUD资源              |
-| service                     | s      | 生成一个服务文件                  |
+| 命令名称                    | 简写   | 说明                              | 文件名            |
+| --------------------------- | ------ | --------------------------------- | ----------------- |
+| new <name> [path]           |        | 创建一个新的 Nest 应用            |                   |
+| build                       |        | 构建 Nest 应用                    |                   |
+| start                       |        | 启动已构建的 Nest 应用            |                   |
+| generate <schematic> [name] |        | 生成代码文件                      |                   |
+| add <schematic> [name]      |        | 添加特性或库到现有的 Nest 应用    |                   |
+| update                      |        | 更新 Nest CLI                     |                   |
+| info                        |        | 输出关于系统环境的诊断信息        |                   |
+| ——————————————————————————  | —————— | ————————————————————————————————— |                   |
+| class                       | cl     | 生成一个类文件                    |                   |
+| configuration               | config | 生成CLI配置文件                   |                   |
+| controller                  | co     | 生成一个控制器文件                |                   |
+| decorator                   | de     | 生成一个装饰器文件                |                   |
+| filter                      | f      | 生成一个过滤器文件                |                   |
+| gateway                     | ga     | 生成一个网关文件                  | \*.gateway.ts     |
+| guard                       | gu     | 生成一个守卫文件                  | \*.guard.ts       |
+| interceptor                 | itc    | 生成一个拦截器文件                | \*.interceptor.ts |
+| library                     | lib    | 生成一个在monorep的新库           |                   |
+| interface                   | itf    | 生成一个接口文件                  | \*.interface.ts   |
+| middleware                  | mi     | 生成一个中间件文件                | \*.middleware.ts  |
+| module                      | mo     | 生成一个模块文件                  | \*.module.ts      |
+| pipe                        | pi     | 生成一个管道文件                  | \*.pipe.ts        |
+| provider                    | pr     | 生成一个测试文件                  | \*.ts             |
+| resolver                    | r      | 生成一个解析器文件                | \*.resolver.ts    |
+| resource                    | res    | 生成一个新的CRUD资源              |                   |
+| service                     | s      | 生成一个服务文件                  | \*.service.ts     |
 
 ### RESTful 版本控制
 
@@ -81,10 +81,12 @@ import { VersioningType } from '@nestjs/common';
 | Code码 | 英文                  | 中文                                   |
 | ------ | --------------------- | -------------------------------------- |
 | 200    | ok                    | 请求成功，服务器正常处理并返回数据     |
+| 201    | Created               | 请求成功，并创建了资源                 |
+| 204    | No Content            | 请求成功处理了请求，但没有返回任何内容 |
 | 304    | Not Modified          | 客户端缓存的资源为最新，不需要重新下载 |
 | 400    | Bad Request           | 服务器无法理解请求的格式               |
 | 401    | Unauthorized          | 请求未经授权，需要身份验证             |
-| 403    | Forbidden             | 服务器拒绝服务 ，没有访问权限          |
+| 403    | Forbidden             | 服务器拒绝服务                         |
 | 404    | Not Found             | 请求资源不存在                         |
 | 500    | Internal Server Error | 服务端错误                             |
 | 502    | Bad Gateway           | 上游接口有问题或者服务器问题           |
@@ -117,12 +119,15 @@ npm i @types/express-session -D
 
 参数配置详解
 
-| 参数    | 说明                                                                                            |
-| ------- | ----------------------------------------------------------------------------------------------- |
-| secret  | 生成服务端session 签名 可以理解为加盐                                                           |
-| name    | 生成客户端cookie 的名字 默认 connect.sid                                                        |
-| cookie  | 设置返回到前端 key 的属性，默认值为{ path: ‘/’, httpOnly: true, secure: false, maxAge: null }。 |
-| rolling | 在每次请求时强行设置 cookie，这将重置 cookie 过期时间(默认:false)                               |
+| 参数              | 默认值      | 说明                                                                                            |
+| ----------------- | ----------- | ----------------------------------------------------------------------------------------------- |
+| secret            | undefined   | 生成服务端session 签名 可以理解为加盐                                                           |
+| name              | connect.sid | 生成客户端cookie 的名字                                                                         |
+| cookie            | true        | 设置返回到前端 key 的属性，默认值为{ path: ‘/’, httpOnly: true, secure: false, maxAge: null }。 |
+| resave            | false       | 是否在每次请求时强制更新会话                                                                    |
+| rolling           | false       | 在每次请求时强行设置 cookie，这将重置 cookie 过期时间                                           |
+| store             | string      | 用于指定会话数据的存储方式，                                                                    |
+| saveUninitialized | true        | 表示是否在会话初始化时就进行存储。可以考虑将其设置为 false，以避免未经修改的会话被存储          |
 
 **axios 携带 cookie**
 

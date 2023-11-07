@@ -3,13 +3,13 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as svgCaptcha from 'svg-captcha';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Test } from '../test/entities/test.entity';
+import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(Test) private readonly test: Repository<Test>,
+    @InjectRepository(User) private readonly test: Repository<User>,
   ) {}
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
@@ -51,9 +51,10 @@ export class UserService {
     };
     return svgCaptcha.create(options);
   }
+  // 验证
   createuser(Body, session) {
     if (!session.code) {
-      throw new HttpException('验证失败', HttpStatus.BAD_REQUEST);
+      throw new HttpException('请先获取验证码', HttpStatus.FORBIDDEN);
     }
 
     if (session.code.toLocaleLowerCase() === Body.code.toLocaleLowerCase()) {
@@ -67,8 +68,8 @@ export class UserService {
   }
 
   // 添加用户
-  async addUser(createUserDto: Test) {
-    const data = new Test();
+  async addUser(createUserDto: User) {
+    const data = new User();
     data.name = createUserDto.name;
     data.password = createUserDto.password;
     try {

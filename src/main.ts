@@ -14,6 +14,7 @@ async function bootstrap() {
       name: 'tang_session',
       cookie: {
         maxAge: 60 * 60 * 24,
+        httpOnly: true,
       },
     }),
   );

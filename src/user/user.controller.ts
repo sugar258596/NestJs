@@ -24,12 +24,22 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('code')
+  @ApiOperation({ summary: '验证码' })
+  @ApiResponse({
+    status: 200,
+    description: 'Captcha image',
+    content: {
+      'image/svg+xml': { schema: { type: 'string', format: 'binary' } },
+    },
+  })
   createCode(@Req() req, @Res() res: Response, @Session() session) {
     const captch = this.userService.getCode();
     session.code = captch.text;
-    res.type('image/svg+xml');
+    console.log(captch.text);
+    res.set('Content-Type', 'image/svg+xml');
     res.send(captch.data);
   }
+
   @Post('create')
   createuser(@Body() Body, @Session() session) {
     console.log('session.code', session.code);
@@ -38,11 +48,35 @@ export class UserController {
 
   @Post('adduser')
   @ApiBody({ type: CreateUserDto })
-  @ApiOperation({
-    summary: '添加用户',
-    description: '用于用户添加',
+  @ApiOperation({ summary: '添加用户', description: '用于用户添加' })
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            data: {
+              type: 'string',
+              description: 'Data returned by the API',
+              default: '用户已添加成功',
+            },
+            message: {
+              type: 'string',
+              description: 'Message indicating the result of the operation',
+              default: '成功',
+            },
+            code: {
+              type: 'number',
+              description: 'Status code of the response',
+              default: 200,
+            },
+          },
+        },
+      },
+    },
   })
-  @ApiResponse({ status: 200, description: 'Success' })
   @ApiResponse({ status: 404, description: 'User not found' })
   createAdd(@Body() Body: UpdateUserDto) {
     return this.userService.addUser(Body);
