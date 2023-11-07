@@ -138,3 +138,26 @@ axios.defaults.withCredentials = true;
 ```tsnpm install --save @nestjs/typeorm typeorm mysql2
 npm install --save @nestjs/typeorm typeorm mysql2
 ```
+
+### ValidationPipe 验证配置
+
+| 选项                    | 类型     | 描述                                                                                  |
+| ----------------------- | -------- | ------------------------------------------------------------------------------------- |
+| transform               | boolean  | 如果设置为 true，验证器将自动转换传入的数据类型                                       |
+| enableDebugMessages     | boolean  | 如果设置为 true，验证器将在出现问题时向控制台打印额外的警告消息                       |
+| skipUndefinedProperties | boolea   | 如果设置为 true，则验证器将跳过验证对象中未定义的所有属性的验证                       |
+| skipNullProperties      | boolean  | 如果设置为 true，则验证器将跳过验证对象中所有为 null 的属性的验证                     |
+| skipMissingProperties   | boolean  | 如果设置为 true，则验证器将跳过验证对象中所有为 null 或未定义的属性的验证             |
+| whitelist               | boolean  | 如果设置为 true，验证器将去除任何不使用任何验证装饰器的属性的已验证（返回）对象       |
+| forbidNonWhitelisted    | boolean  | 如果设置为 true，验证器将抛出异常而不是剥离非白名单属性                               |
+| forbidUnknownValues     | boolean  | 如果设置为 true，验证未知对象的尝试会立即失败                                         |
+| disableErrorMessages    | boolean  | 如果设置为 true，验证错误将不会返回给客户端                                           |
+| errorHttpStatusCode     | number   | 此设置允许你指定在出现错误时将使用哪种异常类型。 默认情况下它抛出 BadRequestException |
+| exceptionFactory        | Function | 获取验证错误数组并返回要抛出的异常对象                                                |
+| groups                  | string[] | 对象验证期间要使用的组                                                                |
+| always                  | boolean  | 为装饰器的 always 选项设置默认值。 可以在装饰器选项中覆盖默认                         |
+| strictGroups            | boolean  | 如果 groups 未给出或为空，则忽略至少有一组的装饰器                                    |
+| dismissDefaultMessages  | boolean  | 如果设置为 true，验证将不使用默认消息。 如果未明确设置，错误消息始终为 undefined      |
+| validationError.target  | boolean  | 指示目标是否应在 ValidationError 中公开                                               |
+| validationError.value   | boolean  | 指示是否应在 ValidationError 中公开经过验证的值                                       |
+| stopAtFirstError        | boolean  | 当设置为 true 时，给定属性的验证将在遇到第一个错误后停止。 默认为假                   |
