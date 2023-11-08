@@ -11,24 +11,78 @@ export class UserService {
   constructor(
     @InjectRepository(User) private readonly test: Repository<User>,
   ) {}
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const data = await this.test.find({
+        where: { name: createUserDto.name },
+      });
+      return {
+        data,
+        message: '查询成功',
+        length: data.length,
+      };
+    } catch (err) {
+      throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll() {
+    try {
+      const data = await this.test.find();
+      return {
+        data,
+        message: '查询成功',
+        length: data.length,
+      };
+    } catch (err) {
+      throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    try {
+      const data = await this.test.findOne({ where: { id } });
+      if (data) {
+        return {
+          data,
+          message: '查询成功',
+        };
+      } else {
+        return {
+          data,
+          message: '没有数据',
+        };
+      }
+    } catch (err) {
+      throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    try {
+      const data = await this.test.update(
+        { id },
+        { name: updateUserDto.name, password: updateUserDto.password },
+      );
+      return {
+        message: '修改成功',
+        length: data.affected,
+      };
+    } catch (err) {
+      throw new HttpException('修改失败', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    try {
+      const data = await this.test.delete({ id });
+      return {
+        message: '删除成功',
+        length: data.affected,
+      };
+    } catch (err) {
+      throw new HttpException('删除失败', HttpStatus.BAD_REQUEST);
+    }
   }
 
   // 生成验证码图片
@@ -72,9 +126,16 @@ export class UserService {
     const data = new User();
     data.name = createUserDto.name;
     data.password = createUserDto.password;
+    const databaseQuery = await this.create(createUserDto);
+    if (databaseQuery.length) {
+      throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST);
+    }
     try {
-      this.test.save(data);
-      return '用户已添加成功';
+      await this.test.save(data);
+      return {
+        data: [],
+        message: '用户已添加成功',
+      };
     } catch {
       throw new HttpException('添加用户失败', HttpStatus.BAD_REQUEST);
     }

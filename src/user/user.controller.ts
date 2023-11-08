@@ -11,12 +11,19 @@ import {
   Query,
   Headers,
   Session,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import type { Request, Response } from 'express';
-import { ApiTags, ApiResponse, ApiBody, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiResponse,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+} from '@nestjs/swagger';
 
 @Controller('user')
 @ApiTags('user')
@@ -83,26 +90,64 @@ export class UserController {
   }
 
   @Post()
+  @ApiBody({ type: CreateUserDto })
+  @ApiOperation({ summary: '用户查找' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @Get()
+  @ApiOperation({ summary: '查询全部' })
   findAll(@Query() req) {
     return this.userService.findAll();
   }
   A;
   @Get(':id')
-  findOne(@Param('id') id: string, @Headers() Header) {
-    return this.userService.findOne(+id);
+  @ApiOperation({ summary: 'id查询' })
+  @ApiQuery({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiBody({ type: CreateUserDto })
+  @ApiOperation({ summary: '数据更新' })
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            data: {
+              type: 'string',
+              description: 'Data returned by the API',
+              default: '数据修改成功',
+            },
+            message: {
+              type: 'string',
+              description: 'Message indicating the result of the operation',
+              default: '数据修改成功',
+            },
+            code: {
+              type: 'number',
+              description: 'Status code of the response',
+              default: 200,
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiQuery({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'id删除' })
+  @ApiQuery({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }

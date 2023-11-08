@@ -25,10 +25,12 @@ export class Response<T> implements NestInterceptor {
     console.log('response.statusCode', response.statusCode);
 
     return next.handle().pipe(
-      map((data) => {
+      map((e) => {
+        const { data, message, length } = e;
         return {
           data,
-          message: '成功',
+          message,
+          length,
           code: 200,
         };
       }),

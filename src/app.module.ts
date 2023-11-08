@@ -5,16 +5,9 @@ import { UserModule } from './user/user.module';
 import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { Response } from './common/response.interceptor';
 import { HttpFilter } from './common/filter';
-import { AModule } from './a/a.module';
-import { AService } from './a/a.service';
-import { AGateway } from './a/a.gateway';
-import { AModule } from './a/a.module';
-import { A } from './a/a';
-import { AResolver } from './a/a.resolver';
-import { AService } from './a/a.service';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(MYSQl), UserModule, AModule],
+  imports: [TypeOrmModule.forRoot(MYSQl), UserModule],
   providers: [
     {
       // 响应拦截器注册
@@ -31,10 +24,6 @@ import { AService } from './a/a.service';
       provide: APP_PIPE,
       useClass: ValidationPipe,
     },
-    AService,
-    AResolver,
-    A,
-    AGateway,
   ],
 })
 export class AppModule {}

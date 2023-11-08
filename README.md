@@ -44,7 +44,7 @@
 | class                       | cl     | 生成一个类文件                    |                   |
 | configuration               | config | 生成CLI配置文件                   |                   |
 | controller                  | co     | 生成一个控制器文件                |                   |
-| decorator                   | de     | 生成一个装饰器文件                |                   |
+| decorator                   | d      | 生成一个装饰器文件                |                   |
 | filter                      | f      | 生成一个过滤器文件                |                   |
 | gateway                     | ga     | 生成一个网关文件                  | \*.gateway.ts     |
 | guard                       | gu     | 生成一个守卫文件                  | \*.guard.ts       |

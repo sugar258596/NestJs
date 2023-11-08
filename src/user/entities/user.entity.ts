@@ -47,7 +47,7 @@ export class User {
   name: string;
 
   @Column({
-    select: true,
+    select: false,
     comment: '密码',
   })
   password: string;
