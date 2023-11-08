@@ -20,7 +20,6 @@ interface Data<T> {
 export class Response<T> implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<Data<T>> {
     const ctx = context.switchToHttp();
-    const request = ctx.getRequest<Request>();
     const response = ctx.getResponse();
     console.log('response.statusCode', response.statusCode);
 

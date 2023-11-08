@@ -8,15 +8,13 @@ import {
   Delete,
   Res,
   Req,
-  Query,
-  Headers,
   Session,
   ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import {
   ApiTags,
   ApiResponse,
@@ -98,10 +96,10 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: '查询全部' })
-  findAll(@Query() req) {
+  findAll() {
     return this.userService.findAll();
   }
-  A;
+
   @Get(':id')
   @ApiOperation({ summary: 'id查询' })
   @ApiQuery({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数

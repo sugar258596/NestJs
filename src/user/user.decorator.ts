@@ -1,8 +1,3 @@
-import {
-  SetMetadata,
-  createParamDecorator,
-  ExecutionContext,
-} from '@nestjs/common';
-import type { Request, Response } from 'express';
+import { SetMetadata } from '@nestjs/common';
 
 export const User = (...args: string[]) => SetMetadata('user', args);
