@@ -21,7 +21,9 @@ export class Response<T> implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<Data<T>> {
     const ctx = context.switchToHttp();
     const response = ctx.getResponse();
-    console.log('response.statusCode', response.statusCode);
+    if (ctx.getRequest().url.includes('code')) {
+      return next.handle();
+    }
 
     return next.handle().pipe(
       map((e) => {

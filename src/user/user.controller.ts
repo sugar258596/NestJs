@@ -11,10 +11,6 @@ import {
   Session,
   ParseIntPipe,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import type { Response } from 'express';
 import {
   ApiTags,
   ApiResponse,
@@ -22,6 +18,10 @@ import {
   ApiOperation,
   ApiQuery,
 } from '@nestjs/swagger';
+import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import type { Response } from 'express';
 
 @Controller('user')
 @ApiTags('user')
