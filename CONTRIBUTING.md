@@ -13,7 +13,7 @@
 Commit messages 请遵循[conventional-changelog 标准](https://www.conventionalcommits.org/en/v1.0.0/)：
 
 ```bash
-<类型>[可选 范围]:  <描述>
+<类型>[可选 范围]: <描述>
 
 [可选 正文]
 
