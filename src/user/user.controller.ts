@@ -16,7 +16,7 @@ import {
   ApiResponse,
   ApiBody,
   ApiOperation,
-  ApiQuery,
+  ApiParam,
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -102,8 +102,8 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({ summary: 'id查询' })
-  @ApiQuery({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  @ApiParam({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
 
@@ -138,15 +138,18 @@ export class UserController {
       },
     },
   })
-  @ApiQuery({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @ApiParam({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return this.userService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'id删除' })
-  @ApiQuery({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
-  remove(@Param('id') id: string) {
+  @ApiParam({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.userService.remove(+id);
   }
 }

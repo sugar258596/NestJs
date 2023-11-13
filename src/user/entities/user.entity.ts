@@ -4,7 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Static } from '../../enum/SQL';
+import { Address } from '../../address/entities/address.entity';
 
 // 定义实体类
 /**
@@ -29,11 +32,6 @@ import {
    *  @UpdateDateColumn 每次调用实体管理器或存储库的 save 时，它都会自动设置为实体的更新时间
    */
 
-enum Static {
-  ok = 1,
-  err = 2,
-}
-
 @Entity()
 export class User {
   @PrimaryGeneratedColumn({
@@ -51,6 +49,9 @@ export class User {
     comment: '密码',
   })
   password: string;
+
+  @OneToMany(() => Address, (Address) => Address.userId)
+  address?: Address[];
 
   @CreateDateColumn({
     type: 'timestamp',
