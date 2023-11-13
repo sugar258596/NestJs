@@ -14,3 +14,5 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @MaxLength(22, { message: '密码不能超过22个字符' })
   password: string;
 }
+
+export class createCodeDto extends CreateUserDto {}

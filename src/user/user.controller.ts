@@ -46,6 +46,30 @@ export class UserController {
   }
 
   @Post('create')
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            data: {
+              type: 'string',
+              description: 'Data returned by the API',
+              default: '验证成功',
+            },
+            code: {
+              type: 'number',
+              description: 'Status code of the response',
+              default: 200,
+            },
+          },
+        },
+      },
+    },
+  })
   createuser(@Body() Body, @Session() session) {
     console.log('session.code', session.code);
     return this.userService.createuser(Body, session);
