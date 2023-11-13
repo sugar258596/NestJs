@@ -4,7 +4,7 @@ import MYSQl from './mysql/mysl.config';
 import { UserModule } from './user/user.module';
 import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { Response } from './common/response.interceptor';
-import { HttpFilter } from './common/filter';
+import { HttpFilter } from './common/filter.exception';
 
 @Module({
   imports: [TypeOrmModule.forRoot(MYSQl), UserModule],
