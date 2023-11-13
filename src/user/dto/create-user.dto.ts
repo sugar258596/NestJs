@@ -17,3 +17,11 @@ export class CreateUserDto {
   })
   password: string;
 }
+
+export class createCodeDto extends CreateUserDto {
+  @ApiProperty({
+    example: '',
+    description: '验证码',
+  })
+  code: string;
+}

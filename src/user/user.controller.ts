@@ -19,8 +19,8 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, createCodeDto } from './dto/create-user.dto';
+import { UpdateUserDto, UpdataCodeDto } from './dto/update-user.dto';
 import type { Response } from 'express';
 
 @Controller('user')
@@ -46,7 +46,7 @@ export class UserController {
   }
 
   @Post('create')
-  @ApiBody({ type: CreateUserDto })
+  @ApiBody({ type: createCodeDto })
   @ApiResponse({
     status: 200,
     description: 'OK',
@@ -70,7 +70,7 @@ export class UserController {
       },
     },
   })
-  createuser(@Body() Body, @Session() session) {
+  createuser(@Body() Body: UpdataCodeDto, @Session() session) {
     console.log('session.code', session.code);
     return this.userService.createuser(Body, session);
   }
@@ -132,8 +132,8 @@ export class UserController {
   }
 
   @Patch(':id')
-  @ApiBody({ type: CreateUserDto })
   @ApiOperation({ summary: '数据更新' })
+  @ApiBody({ type: CreateUserDto })
   @ApiResponse({
     status: 200,
     description: 'OK',

@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
+import { CreateUserDto, createCodeDto } from './create-user.dto';
 import { IsNotEmpty, MinLength, MaxLength, IsString } from 'class-validator';
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsString()
@@ -15,4 +15,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   password: string;
 }
 
-export class createCodeDto extends CreateUserDto {}
+export class UpdataCodeDto extends PartialType(createCodeDto) {
+  @IsString()
+  @IsNotEmpty({ message: '密码不能为空' })
+  code: string;
+}
