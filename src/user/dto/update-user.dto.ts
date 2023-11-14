@@ -1,6 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto, createCodeDto } from './create-user.dto';
+import { CreateUserDto, createCodeDto, pagingDto } from './create-user.dto';
 import { IsNotEmpty, MinLength, MaxLength, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsString()
   @IsNotEmpty({ message: '昵称不能为空' })
@@ -19,4 +20,19 @@ export class UpdataCodeDto extends PartialType(createCodeDto) {
   @IsString()
   @IsNotEmpty({ message: '密码不能为空' })
   code: string;
+}
+
+export class UpdataPagingDto extends PartialType(pagingDto) {
+  @ApiProperty({
+    example: 1,
+    description: '页码',
+    required: false,
+  })
+  page: number;
+  @ApiProperty({
+    example: 10,
+    description: '页数',
+    required: false,
+  })
+  pagination: number;
 }

@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, pagingDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as svgCaptcha from 'svg-captcha';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -26,10 +26,14 @@ export class UserService {
     }
   }
 
-  async findAll() {
+  async findAll(pagingDto: pagingDto) {
+    const { page, pagination } = pagingDto;
+
     try {
       const data = await this.test.find({
         relations: ['addresses'],
+        skip: page ? page : 0,
+        take: pagination ? pagination : 10,
       });
       return {
         data,
@@ -37,8 +41,6 @@ export class UserService {
         length: data.length,
       };
     } catch (err) {
-      console.log(err);
-
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
