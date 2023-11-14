@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
-import { Static } from '../../enum/SQL';
+import { Static, Add } from '../../enum/SQL';
 @Entity()
 export class Address {
   @PrimaryGeneratedColumn({
@@ -17,17 +17,19 @@ export class Address {
   addressName: string;
   @Column({
     comment: '电话号码',
+    length: 20,
   })
-  phone: number;
+  phone: string;
   @Column({
+    type: 'enum',
+    enum: Add,
+    default: Add.PostalCode,
     comment: '邮政编码',
   })
   PostalCode?: number;
   @Column({
     comment: '用户ID',
   })
-  @ManyToOne(() => User, (user) => user.id)
-  userId: number;
   @Column({
     type: 'enum',
     enum: Static,
@@ -35,4 +37,7 @@ export class Address {
     comment: '状态',
   })
   static?: number;
+
+  @ManyToOne(() => User, (user) => user.addresses)
+  user: User;
 }

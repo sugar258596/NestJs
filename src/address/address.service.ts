@@ -1,20 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { Address } from './entities/address.entity';
 @Injectable()
 export class AddressService {
-  create(createAddressDto: CreateAddressDto) {
+  constructor(
+    @InjectRepository(Address) private readonly Add: Repository<Address>,
+  ) {}
+  async create(createAddressDto: CreateAddressDto) {
     const address = new Address();
-    return 'This action adds a new address';
+    Object.keys(createAddressDto).forEach((e) => {
+      address[e] = createAddressDto[e];
+    });
+    try {
+      await this.Add.save(address);
+      return {
+        data: [],
+        message: '地址已添加成功',
+      };
+    } catch (err) {
+      console.log(err);
+
+      throw new HttpException('添加地址失败', HttpStatus.BAD_REQUEST);
+    }
   }
 
   findAll() {
     return `This action returns all address`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} address`;
+  findOne(name: string) {
+    return `This action returns a #${name} address`;
+  }
+  findPhone(phone: number) {
+    return `This action returns a #${phone} address`;
   }
 
   update(id: number, updateAddressDto: UpdateAddressDto) {

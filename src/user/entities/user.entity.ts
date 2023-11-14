@@ -50,9 +50,6 @@ export class User {
   })
   password: string;
 
-  @OneToMany(() => Address, (Address) => Address.userId)
-  address?: Address[];
-
   @CreateDateColumn({
     type: 'timestamp',
     comment: '创建时间',
@@ -71,4 +68,7 @@ export class User {
     comment: '状态',
   })
   static?: number;
+
+  @OneToMany(() => Address, (address) => address.user)
+  addresses?: Address[];
 }
