@@ -12,12 +12,7 @@ import { Veriofy } from 'src/veriofy';
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UserController],
-  providers: [
-    {
-      provide: UserService,
-      useClass: UserService,
-    },
-  ],
+  providers: [UserService],
 })
 export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

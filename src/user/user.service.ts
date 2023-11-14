@@ -28,13 +28,17 @@ export class UserService {
 
   async findAll() {
     try {
-      const data = await this.test.find();
+      const data = await this.test.find({
+        relations: ['addresses'],
+      });
       return {
         data,
         message: '查询成功',
         length: data.length,
       };
     } catch (err) {
+      console.log(err);
+
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }

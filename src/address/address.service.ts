@@ -4,16 +4,23 @@ import { Repository } from 'typeorm';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { Address } from './entities/address.entity';
+import { User } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
+
 @Injectable()
 export class AddressService {
   constructor(
     @InjectRepository(Address) private readonly Add: Repository<Address>,
+    @InjectRepository(User) private readonly user: Repository<User>,
+    private readonly userService: UserService,
   ) {}
   async create(createAddressDto: CreateAddressDto) {
+    const { data } = await this.userService.findOne(createAddressDto.userId);
     const address = new Address();
     Object.keys(createAddressDto).forEach((e) => {
       address[e] = createAddressDto[e];
     });
+    address.user = data;
     try {
       await this.Add.save(address);
       return {

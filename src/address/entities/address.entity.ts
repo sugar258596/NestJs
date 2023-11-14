@@ -38,6 +38,6 @@ export class Address {
   })
   static?: number;
 
-  @ManyToOne(() => User, (user) => user.addresses)
+  @ManyToOne(() => User, (user) => user.id)
   user: User;
 }
