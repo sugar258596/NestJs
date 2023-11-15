@@ -66,28 +66,38 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     try {
-      const data = await this.test.update(
+      const { affected } = await this.test.update(
         { id },
         { name: updateUserDto.name, password: updateUserDto.password },
       );
+      if (affected == 0)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       return {
-        message: '修改成功',
-        length: data.affected,
+        message: '数据修改成功',
+        length: affected,
       };
     } catch (err) {
-      throw new HttpException('修改失败', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        err.response || '数据修改失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   async remove(id: number) {
     try {
-      const data = await this.test.delete({ id });
+      const { affected } = await this.test.delete({ id });
+      if (affected == 0)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       return {
-        message: '删除成功',
-        length: data.affected,
+        message: '数据删除成功',
+        length: affected,
       };
     } catch (err) {
-      throw new HttpException('删除失败', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        err.response || '数据删除失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
