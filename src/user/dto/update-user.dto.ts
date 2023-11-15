@@ -24,7 +24,7 @@ export class UpdataCodeDto extends PartialType(createCodeDto) {
 
 export class UpdataPagingDto extends PartialType(pagingDto) {
   @ApiProperty({
-    example: 1,
+    example: 0,
     description: '页码',
     required: false,
   })

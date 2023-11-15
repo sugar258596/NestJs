@@ -15,10 +15,15 @@ import {
   ApiResponse,
   ApiBody,
   ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { AddressService } from './address.service';
-import { CreateAddressDto } from './dto/create-address.dto';
-import { UpdateAddressDto } from './dto/update-address.dto';
+import {
+  CreateAddressDto,
+  SearchDto,
+  pagingDto,
+} from './dto/create-address.dto';
+import { UpdateAddressDto, UpdataPagingDto } from './dto/update-address.dto';
 
 @Controller('address')
 @ApiTags('Address')
@@ -33,20 +38,15 @@ export class AddressController {
 
   @Get()
   @ApiOperation({ summary: '查询全部' })
-  findAll() {
-    return this.addressService.findAll();
+  @ApiQuery({ type: UpdataPagingDto })
+  findAll(pagingDto: pagingDto) {
+    return this.addressService.findAll(pagingDto);
   }
 
-  @Get()
-  @ApiOperation({ summary: '使用name 进行查询' })
-  findOne(@Query() name: string) {
-    return this.addressService.findOne(name);
-  }
-
-  @Get('phone')
-  @ApiOperation({ summary: '使用Phone进行查询' })
-  findPhone(@Query() Phone: number) {
-    return this.addressService.findPhone(Phone);
+  @Get('search')
+  @ApiOperation({ summary: '地址查询' })
+  findOne(@Query() SearchDto: SearchDto) {
+    return this.addressService.find(SearchDto);
   }
 
   @Patch(':id')

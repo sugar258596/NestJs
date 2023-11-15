@@ -28,6 +28,5 @@ export class createCodeDto extends CreateUserDto {
 
 export class pagingDto {
   page: number;
-
   pagination: number;
 }

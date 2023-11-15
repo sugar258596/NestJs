@@ -1,7 +1,11 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateAddressDto } from './dto/create-address.dto';
+import { Repository, ILike } from 'typeorm';
+import {
+  CreateAddressDto,
+  SearchDto,
+  pagingDto,
+} from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
 import { Address } from './entities/address.entity';
 import { User } from '../user/entities/user.entity';
@@ -34,15 +38,38 @@ export class AddressService {
     }
   }
 
-  findAll() {
-    return `This action returns all address`;
+  async findAll(pagingDto: pagingDto) {
+    const { page, pagination } = pagingDto;
+    try {
+      const data = await this.Add.find({
+        relations: ['addresses'],
+        skip: page ? page : 0,
+        take: pagination ? pagination : 10,
+      });
+      return {
+        data,
+        message: '查询成功',
+        length: data.length,
+      };
+    } catch (err) {
+      throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  findOne(name: string) {
-    return `This action returns a #${name} address`;
-  }
-  findPhone(phone: number) {
-    return `This action returns a #${phone} address`;
+  async find(SearchDto: SearchDto) {
+    const data = await this.Add.find({
+      where: [
+        { addressName: ILike(`%${SearchDto.name}%`) },
+        { address: ILike(`%${SearchDto.name}%`) },
+        { phone: SearchDto.name },
+      ],
+    });
+
+    return {
+      data,
+      message: '查询成功',
+      length: data.length,
+    };
   }
 
   update(id: number, updateAddressDto: UpdateAddressDto) {
