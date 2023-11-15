@@ -32,15 +32,28 @@ export class CreateAddressDto {
   PostalCode?: number;
 }
 
-export class SearchDto {
+export class pagingDto {
+  page: number;
+  pagination: number;
+}
+
+export class SearchDto extends pagingDto {
   @ApiProperty({
     example: '糖',
     description: '可以通过昵称，电话号码，模糊地址查询',
   })
   name: string;
-}
 
-export class pagingDto {
+  @ApiProperty({
+    example: 0,
+    description: '页码',
+    required: false,
+  })
   page: number;
+  @ApiProperty({
+    example: 10,
+    description: '页数',
+    required: false,
+  })
   pagination: number;
 }

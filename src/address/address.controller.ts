@@ -39,7 +39,7 @@ export class AddressController {
   @Get()
   @ApiOperation({ summary: '查询全部' })
   @ApiQuery({ type: UpdataPagingDto })
-  findAll(pagingDto: pagingDto) {
+  findAll(@Query() pagingDto: pagingDto) {
     return this.addressService.findAll(pagingDto);
   }
 

@@ -10,6 +10,8 @@ import { UpdateAddressDto } from './dto/update-address.dto';
 import { Address } from './entities/address.entity';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
+import { skip } from 'node:test';
+import { parseCache } from 'vue/compiler-sfc';
 
 @Injectable()
 export class AddressService {
@@ -42,7 +44,6 @@ export class AddressService {
     const { page, pagination } = pagingDto;
     try {
       const data = await this.Add.find({
-        relations: ['addresses'],
         skip: page ? page : 0,
         take: pagination ? pagination : 10,
       });
@@ -57,26 +58,68 @@ export class AddressService {
   }
 
   async find(SearchDto: SearchDto) {
-    const data = await this.Add.find({
-      where: [
-        { addressName: ILike(`%${SearchDto.name}%`) },
-        { address: ILike(`%${SearchDto.name}%`) },
-        { phone: SearchDto.name },
-      ],
-    });
+    const { name, page, pagination } = SearchDto;
+    try {
+      const [data, total] = await this.Add.createQueryBuilder()
+        .where([
+          { addressName: ILike(`%${name}%`) },
+          { address: ILike(`%${name}%`) },
+          { phone: name },
+        ])
+        .skip(page ? page : 0)
+        .take(pagination ? pagination : 10)
+        .getManyAndCount();
 
-    return {
-      data,
-      message: '查询成功',
-      length: data.length,
-    };
+      return {
+        data,
+        message: '查询成功',
+        length: total,
+      };
+    } catch (err) {
+      throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  update(id: number, updateAddressDto: UpdateAddressDto) {
-    return `This action updates a #${id} address`;
+  async update(id: number, updateAddressDto: UpdateAddressDto) {
+    const { addressName, phone, PostalCode, address } = updateAddressDto;
+    try {
+      const { affected } = await this.Add.update(
+        { id },
+        {
+          addressName: addressName,
+          phone: phone,
+          PostalCode: PostalCode,
+          address: address,
+        },
+      );
+      if (affected == 0)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
+      return {
+        message: '数据更新成功',
+        length: affected,
+      };
+    } catch (err) {
+      throw new HttpException(
+        err.response || '数据更新失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} address`;
+  async remove(id: number) {
+    try {
+      const { affected } = await this.Add.delete({ id });
+      if (affected == 0)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
+      return {
+        message: '数据删除成功',
+        length: affected,
+      };
+    } catch (err) {
+      throw new HttpException(
+        err.response || '数据删除失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

@@ -3,11 +3,7 @@ import { CreateAddressDto, SearchDto, pagingDto } from './create-address.dto';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class UpdateAddressDto extends PartialType(CreateAddressDto) {}
-export class UpdateSearchDto extends PartialType(SearchDto) {
-  @IsString()
-  @IsNotEmpty({ message: '不能为空' })
-  name?: string;
-}
+
 export class UpdataPagingDto extends PartialType(pagingDto) {
   @ApiProperty({
     example: 0,
@@ -21,4 +17,10 @@ export class UpdataPagingDto extends PartialType(pagingDto) {
     required: false,
   })
   pagination: number;
+}
+
+export class UpdateSearchDto extends PartialType(SearchDto) {
+  @IsString()
+  @IsNotEmpty({ message: '不能为空' })
+  name?: string;
 }
