@@ -20,8 +20,8 @@ export class AddressService {
     @InjectRepository(User) private readonly user: Repository<User>,
     private readonly userService: UserService,
   ) {}
-  async create(createAddressDto: CreateAddressDto) {
-    const { data } = await this.userService.findOne(createAddressDto.userId);
+  async create(createAddressDto: CreateAddressDto, id: number) {
+    const { data } = await this.userService.findOne(id);
     const address = new Address();
     Object.keys(createAddressDto).forEach((e) => {
       address[e] = createAddressDto[e];

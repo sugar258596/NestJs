@@ -32,8 +32,9 @@ export class AddressController {
 
   @Post()
   @ApiOperation({ summary: '添加地址' })
-  create(@Body() createAddressDto: CreateAddressDto) {
-    return this.addressService.create(createAddressDto);
+  @ApiQuery({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
+  create(@Body() createAddressDto: CreateAddressDto, @Query() id: number) {
+    return this.addressService.create(createAddressDto, id);
   }
 
   @Get()

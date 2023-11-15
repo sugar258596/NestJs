@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 export class CreateAddressDto {
   @ApiProperty({
-    example: 1,
-    description: '用户ID',
-  })
-  userId: number;
-
-  @ApiProperty({
     example: '糖',
     description: '昵称',
   })
