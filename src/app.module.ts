@@ -6,9 +6,11 @@ import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { Response } from './common/response.interceptor';
 import { HttpFilter } from './common/filter.exception';
 import { AddressModule } from './address/address.module';
+import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(MYSQl), UserModule, AddressModule],
+  imports: [TypeOrmModule.forRoot(MYSQl), UserModule, AddressModule, AuthModule],
   providers: [
     {
       // 响应拦截器注册
