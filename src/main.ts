@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import * as session from 'express-session';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { swaggerOptions } from './strategy/constants';
 
 const post: number = 3000;
 async function bootstrap() {

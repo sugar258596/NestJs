@@ -11,7 +11,7 @@ export class CreateAuthDto {
     example: '123456',
     description: '密码',
   })
-  passwrod: string;
+  password: string;
 
   @ApiProperty({
     example: '',

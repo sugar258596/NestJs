@@ -11,36 +11,25 @@ import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as svgCaptcha from 'svg-captcha';
 import { JwtService } from '@nestjs/jwt';
+import { UserService } from '../user/user.service';
 @Injectable()
 export class AuthService {
   constructor(
     private JwtService: JwtService,
-    @InjectRepository(User) private readonly user: Repository<User>,
+    private readonly UserService: UserService,
   ) {}
 
   async login(CreateAuthDto: CreateAuthDto, Session) {
-    const { username, passwrod, swxCode } = CreateAuthDto;
-    console.log(username, passwrod, swxCode);
-
-    // if (this.createuser(swxCode, Session)) {
-    const user = await this.user
-      .createQueryBuilder('user')
-      .addSelect(['user.username', 'user.password'])
-      .where('user.username = :name', { name: username })
-      .getOne();
-    console.log(user);
-
-    if (user?.password !== passwrod)
+    // if (!this.createuser(CreateAuthDto.swxCode, Session)) return;
+    const user = await this.UserService.createSQL(CreateAuthDto.username);
+    if (user?.password !== CreateAuthDto.password)
       throw new UnauthorizedException('认证失败,密码错误');
     const { password, ...data } = user;
-    console.log(data, '======');
     return {
       data,
       access_token: await this.JwtService.signAsync(data),
       message: '登录成功',
     };
-
-    // }
   }
 
   /**
