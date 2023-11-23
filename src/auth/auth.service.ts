@@ -43,11 +43,17 @@ export class AuthService {
     // }
   }
 
-  register() {}
+  /**
+   *  生成验证码图片
+   * @param {number} size 验证码长度
+   * @param {number}  noise 干扰线的数量
+   * @param  {number} fontSize 验证码文本的字体大小
+   * @param  {number} width
+   * @param  {number} height
+   * @param {string}  bg 验证码图片的背景颜色
+   * @returns
+   */
 
-  logOut() {}
-
-  // 生成验证码图片
   Code(
     size: number = 4,
     noise: number = 4,
@@ -57,18 +63,23 @@ export class AuthService {
     bg: string = '#1f2437',
   ) {
     const options = {
-      size: size, //验证码长度
-      fontSize: fontSize, // 验证码文本的字体大小
+      size: size,
+      fontSize: fontSize,
       color: true,
       width: width,
       height: height,
-      background: bg, //验证码图片的背景颜色
-      noise: noise, //干扰线的数量
+      background: bg,
+      noise: noise,
     };
     return svgCaptcha.create(options);
   }
 
-  // 验证码验证
+  /**
+   * 验证码验证
+   * @param {string} code 验证码
+   * @param  Session  Session信息
+   * @returns {boolean}
+   */
   createuser(code: string, Session) {
     if (!Session.code)
       throw new HttpException('请先获取验证码', HttpStatus.FORBIDDEN);
@@ -76,4 +87,8 @@ export class AuthService {
       throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
     return true;
   }
+
+  register() {}
+
+  logOut() {}
 }

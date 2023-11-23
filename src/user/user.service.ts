@@ -119,16 +119,30 @@ export class UserService {
    */
   async create(SearchUserDto: SearchUserDto) {
     try {
-      const user = await this.test
-        .createQueryBuilder('user')
-        .addSelect(['user.username', 'user.password'])
-        .where('user.username = :name', { name: SearchUserDto.username })
-        .getOne();
+      const user = await this.createSQL(SearchUserDto.username);
       const { password, ...data } = user;
       return {
         data,
         message: '查询成功',
       };
+    } catch (err) {
+      throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   *
+   * @param username 用户名
+   * @returns  {Promise<User>} 返回查询后的用户信息
+   */
+  async createSQL(username: string) {
+    try {
+      const user = await this.test
+        .createQueryBuilder('user')
+        .addSelect(['user.username', 'user.password'])
+        .where('user.username = :name', { name: username })
+        .getOne();
+      return user;
     } catch (err) {
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
