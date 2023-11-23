@@ -1,7 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { CreateUserDto, pagingDto } from './dto/create-user.dto';
+import { SearchUserDto, pagingDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import * as svgCaptcha from 'svg-captcha';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -11,27 +10,9 @@ export class UserService {
   constructor(
     @InjectRepository(User) private readonly test: Repository<User>,
   ) {}
-  async create(createUserDto: CreateUserDto) {
-    try {
-      const [data, total] = await this.test
-        .createQueryBuilder('user')
-        .where('user.username = :name', { name: createUserDto.username })
-        .getManyAndCount();
-      return {
-        data,
-        message: '查询成功',
-        length: total,
-      };
-    } catch (err) {
-      console.log(err);
-
-      throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
-    }
-  }
 
   async findAll(pagingDto: pagingDto) {
     const { page, pagination } = pagingDto;
-
     try {
       const data = await this.test.find({
         relations: ['addresses'],
@@ -104,49 +85,19 @@ export class UserService {
     }
   }
 
-  // 生成验证码图片
-  getCode(
-    size: number = 4,
-    noise: number = 4,
-    fontSize: number = 50,
-    width: number = 100,
-    height: number = 48,
-    bg: string = '#1f2437',
-  ) {
-    const options = {
-      size: size, //验证码长度
-      fontSize: fontSize, // 验证码文本的字体大小
-      color: true,
-      width: width,
-      height: height,
-      background: bg, //验证码图片的背景颜色
-      noise: noise, //干扰线的数量
-    };
-    return svgCaptcha.create(options);
-  }
-  // 验证
-  createuser(Body, session) {
-    if (!session.code) {
-      throw new HttpException('请先获取验证码', HttpStatus.FORBIDDEN);
-    }
-
-    if (session.code.toLocaleLowerCase() === Body.code.toLocaleLowerCase()) {
-      return {
-        code: 200,
-        message: '验证成功',
-      };
-    } else {
-      throw new HttpException('验证失败', HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  // 添加用户
+  /**
+   * 添加用户
+   * @param {Object} createUserDto 用户信息对象
+   * @param {string} createUserDto.name 用户名
+   * @param {string} createUserDto.password 用户密码
+   * @returns  {Promise<User>} 返回添加后的用户信息
+   */
   async addUser(createUserDto: User) {
     const data = new User();
     data.username = createUserDto.username;
     data.password = createUserDto.password;
     const databaseQuery = await this.create(createUserDto);
-    if (databaseQuery.length) {
+    if (databaseQuery) {
       throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST);
     }
     try {
@@ -157,6 +108,29 @@ export class UserService {
       };
     } catch {
       throw new HttpException('添加用户失败', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * 查找用户
+   * @param {Object} SearchUserDto 用户信息对象
+   * @param {Object} SearchUserDto.username 用户名
+   * @returns {Promise<{ data, message }>} 返回添加后的用户信息
+   */
+  async create(SearchUserDto: SearchUserDto) {
+    try {
+      const user = await this.test
+        .createQueryBuilder('user')
+        .addSelect(['user.username', 'user.password'])
+        .where('user.username = :name', { name: SearchUserDto.username })
+        .getOne();
+      const { password, ...data } = user;
+      return {
+        data,
+        message: '查询成功',
+      };
+    } catch (err) {
+      throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
 }

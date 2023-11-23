@@ -21,67 +21,13 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
-import { CreateUserDto, createCodeDto, pagingDto } from './dto/create-user.dto';
-import {
-  UpdateUserDto,
-  UpdataCodeDto,
-  UpdataPagingDto,
-} from './dto/update-user.dto';
-import type { Response } from 'express';
+import { CreateUserDto, SearchUserDto, pagingDto } from './dto/create-user.dto';
+import { UpdateUserDto, UpdataPagingDto } from './dto/update-user.dto';
 
 @Controller('user')
 @ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Get('code')
-  @ApiOperation({ summary: '验证码' })
-  @ApiResponse({
-    status: 200,
-    description: 'Captcha image',
-    content: {
-      'image/svg+xml': { schema: { type: 'string', format: 'binary' } },
-    },
-  })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  createCode(@Req() req, @Res() res: Response, @Session() session) {
-    const captch = this.userService.getCode();
-    session.code = captch.text;
-    console.log(captch.text);
-    res.set('Content-Type', 'image/svg+xml');
-    res.send(captch.data);
-  }
-
-  @Post('create')
-  @ApiBody({ type: createCodeDto })
-  @ApiResponse({
-    status: 200,
-    description: 'OK',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'object',
-          properties: {
-            data: {
-              type: 'string',
-              description: 'Data returned by the API',
-              default: '验证成功',
-            },
-            code: {
-              type: 'number',
-              description: 'Status code of the response',
-              default: 200,
-            },
-          },
-        },
-      },
-    },
-  })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  createuser(@Body() Body: UpdataCodeDto, @Session() session) {
-    console.log('session.code', session.code);
-    return this.userService.createuser(Body, session);
-  }
 
   @Post('adduser')
   @ApiBody({ type: CreateUserDto })
@@ -122,7 +68,7 @@ export class UserController {
   @Post()
   @ApiOperation({ summary: '用户查找' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: SearchUserDto) {
     return this.userService.create(createUserDto);
   }
 

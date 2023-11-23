@@ -18,6 +18,16 @@ export class CreateUserDto {
   password: string;
 }
 
+export class SearchUserDto {
+  @ApiProperty({
+    example: 'admin',
+    description: '用户昵称',
+    minLength: 2,
+    maxLength: 16,
+  })
+  username: string;
+}
+
 export class createCodeDto extends CreateUserDto {
   @ApiProperty({
     example: '',
