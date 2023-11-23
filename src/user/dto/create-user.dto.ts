@@ -7,7 +7,7 @@ export class CreateUserDto {
     minLength: 2,
     maxLength: 16,
   })
-  name: string;
+  username: string;
 
   @ApiProperty({
     example: '123456',

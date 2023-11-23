@@ -7,7 +7,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsNotEmpty({ message: '昵称不能为空' })
   @MinLength(2, { message: '昵称不能少于2个字符' })
   @MaxLength(16, { message: '昵称不能超过16个字符' })
-  name: string;
+  username: string;
 
   @IsString()
   @IsNotEmpty({ message: '密码不能为空' })

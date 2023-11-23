@@ -42,7 +42,7 @@ export class User {
   @Column({
     comment: '昵称',
   })
-  name: string;
+  username: string;
 
   @Column({
     select: false,

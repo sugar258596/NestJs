@@ -15,16 +15,16 @@ export class UserService {
     try {
       const [data, total] = await this.test
         .createQueryBuilder('user')
-        .addSelect(['user.name', 'user.password'])
-        .where('user.name = :name', { name: createUserDto.name })
+        .where('user.username = :name', { name: createUserDto.username })
         .getManyAndCount();
-
       return {
         data,
         message: '查询成功',
         length: total,
       };
     } catch (err) {
+      console.log(err);
+
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
@@ -71,7 +71,7 @@ export class UserService {
     try {
       const { affected } = await this.test.update(
         { id },
-        { name: updateUserDto.name, password: updateUserDto.password },
+        { username: updateUserDto.username, password: updateUserDto.password },
       );
       if (affected == 0)
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
@@ -143,7 +143,7 @@ export class UserService {
   // 添加用户
   async addUser(createUserDto: User) {
     const data = new User();
-    data.name = createUserDto.name;
+    data.username = createUserDto.username;
     data.password = createUserDto.password;
     const databaseQuery = await this.create(createUserDto);
     if (databaseQuery.length) {

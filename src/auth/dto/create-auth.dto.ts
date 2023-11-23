@@ -2,13 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAuthDto {
   @ApiProperty({
-    example: '',
+    example: 'admin',
     description: '用户昵称',
   })
   username: string;
 
   @ApiProperty({
-    example: '',
+    example: '123456',
     description: '密码',
   })
   passwrod: string;

@@ -20,20 +20,20 @@ export class AuthService {
 
   async login(CreateAuthDto: CreateAuthDto, Session) {
     const { username, passwrod, swxCode } = CreateAuthDto;
+    console.log(username, passwrod, swxCode);
+
     // if (this.createuser(swxCode, Session)) {
     const user = await this.user
       .createQueryBuilder('user')
-      .addSelect(['user.name', 'user.password'])
-      .where('user.name = :name', { name: username })
+      .addSelect(['user.username', 'user.password'])
+      .where('user.username = :name', { name: username })
       .getOne();
+    console.log(user);
+
     if (user?.password !== passwrod)
       throw new UnauthorizedException('认证失败,密码错误');
-    const data = {
-      id: user.id,
-      username: user.name,
-      newData: user.newDate,
-      upData: user.upDate,
-    };
+    const { password, ...data } = user;
+    console.log(data, '======');
     return {
       data,
       access_token: await this.JwtService.signAsync(data),
