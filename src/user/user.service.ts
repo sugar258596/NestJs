@@ -13,13 +13,16 @@ export class UserService {
   ) {}
   async create(createUserDto: CreateUserDto) {
     try {
-      const data = await this.test.find({
-        where: { name: createUserDto.name },
-      });
+      const [data, total] = await this.test
+        .createQueryBuilder('user')
+        .addSelect(['user.name', 'user.password'])
+        .where('user.name = :name', { name: createUserDto.name })
+        .getManyAndCount();
+
       return {
         data,
         message: '查询成功',
-        length: data.length,
+        length: total,
       };
     } catch (err) {
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);

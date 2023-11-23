@@ -10,8 +10,6 @@ import { UpdateAddressDto } from './dto/update-address.dto';
 import { Address } from './entities/address.entity';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
-import { skip } from 'node:test';
-import { parseCache } from 'vue/compiler-sfc';
 
 @Injectable()
 export class AddressService {

@@ -27,9 +27,10 @@ export class Response<T> implements NestInterceptor {
 
     return next.handle().pipe(
       map((e) => {
-        const { data, message, length } = e;
+        const { data, message, length, access_token } = e;
         return {
           data,
+          access_token,
           message,
           length,
           code: 200,

@@ -54,12 +54,12 @@ export class User {
     type: 'timestamp',
     comment: '创建时间',
   })
-  newData?: string;
+  newDate?: string;
 
   @UpdateDateColumn({
     comment: '数据更新',
   })
-  upData?: string;
+  upDate?: string;
 
   @Column({
     type: 'enum',
