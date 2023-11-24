@@ -1,9 +1,20 @@
-import { Controller, Get, Post, Body, Res, Session } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Res,
+  Session,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-import type { Response } from 'express';
+import type { Response, Request } from 'express';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { authToken } from './auth.decorator';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -11,21 +22,32 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @UseGuards(AuthGuard('local'))
   @ApiOperation({ summary: '登录' })
   login(@Body() createAuthDto: CreateAuthDto, @Session() Session) {
-    return this.authService.login(createAuthDto, Session);
+    return this.authService.login(
+      createAuthDto.username,
+      createAuthDto.password,
+      Session,
+    );
   }
 
   @Post('register')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: '注册' })
-  register(@Body() createAuthDto: CreateAuthDto) {
-    return '';
+  register(
+    @authToken('token') token,
+    @Session() session,
+    @Body() createAuthDto: CreateAuthDto,
+  ) {
+    return this.authService.register(session, token);
   }
 
   @Post('logOut')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: '退出' })
-  logOut(@Body() createAuthDto: CreateAuthDto) {
-    return '';
+  logOut(@authToken('token') token, @Session() session, @Req() req: Request) {
+    return this.authService.logOut(req, session, token);
   }
 
   @Get('code')

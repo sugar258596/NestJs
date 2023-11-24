@@ -6,23 +6,30 @@ import {
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user/entities/user.entity';
-import { Repository } from 'typeorm';
 import * as svgCaptcha from 'svg-captcha';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
+import { Request } from 'express';
+
 @Injectable()
 export class AuthService {
+  private blacklistedTokens: Set<string> = new Set();
   constructor(
     private JwtService: JwtService,
     private readonly UserService: UserService,
   ) {}
 
-  async login(CreateAuthDto: CreateAuthDto, Session) {
+  /**
+   *
+   * @param username 用户名
+   * @param pass  用户密码
+   * @param Session  Session信息
+   * @returns {Promise{data,access_token,message}} 登录后的放回信息
+   */
+  async login(username: string, pass: string, Session?) {
     // if (!this.createuser(CreateAuthDto.swxCode, Session)) return;
-    const user = await this.UserService.createSQL(CreateAuthDto.username);
-    if (user?.password !== CreateAuthDto.password)
+    const user = await this.UserService.createSQL(username);
+    if (user?.password !== pass)
       throw new UnauthorizedException('认证失败,密码错误');
     const { password, ...data } = user;
     return {
@@ -69,6 +76,7 @@ export class AuthService {
    * @param  Session  Session信息
    * @returns {boolean}
    */
+
   createuser(code: string, Session) {
     if (!Session.code)
       throw new HttpException('请先获取验证码', HttpStatus.FORBIDDEN);
@@ -77,7 +85,31 @@ export class AuthService {
     return true;
   }
 
-  register() {}
+  async register(session, token: string) {
+    if (
+      session &&
+      session.blacklistedTokens &&
+      session.blacklistedTokens.includes(token)
+    ) {
+      throw new UnauthorizedException('已过期请重新登录');
+    }
+    try {
+      const decodedToken = await this.JwtService.verify(token);
+      return {
+        message: decodedToken,
+      };
+    } catch (error) {
+      throw new UnauthorizedException('已过期请重新登录');
+    }
+  }
 
-  logOut() {}
+  /**
+   *
+   */
+  logOut(req: Request, session, token: string) {
+    session.blacklistedTokens = [...(session.blacklistedTokens || []), token];
+    return {
+      message: '退出成功',
+    };
+  }
 }
