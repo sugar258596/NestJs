@@ -129,7 +129,7 @@ export class UserService {
         message: '查询成功',
       };
     } catch (err) {
-      throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
+      throw new HttpException(err.response, HttpStatus.BAD_REQUEST);
     }
   }
 
