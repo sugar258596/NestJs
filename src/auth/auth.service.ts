@@ -30,7 +30,7 @@ export class AuthService {
     // if (!this.createuser(CreateAuthDto.swxCode, Session)) return;
     const user = await this.UserService.createSQL(username);
     if (user?.password !== pass)
-      throw new UnauthorizedException('认证失败,密码错误');
+      throw new UnauthorizedException('账号或者密码错误');
     const { password, ...data } = user;
     return {
       data,
