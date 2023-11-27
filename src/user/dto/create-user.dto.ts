@@ -16,6 +16,14 @@ export class CreateUserDto {
     maxLength: 22,
   })
   password: string;
+
+  @ApiProperty({
+    example: '123456',
+    description: '邮箱',
+    minLength: 2,
+    maxLength: 22,
+  })
+  Email: string;
 }
 
 export class SearchUserDto {

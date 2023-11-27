@@ -50,6 +50,11 @@ export class User {
   })
   password: string;
 
+  @Column({
+    comment: '电子邮箱',
+  })
+  Email: string;
+
   @CreateDateColumn({
     type: 'timestamp',
     comment: '创建时间',
