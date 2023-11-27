@@ -120,9 +120,6 @@ export class UserService {
   async create(SearchUserDto: SearchUserDto) {
     try {
       const user = await this.createSQL(SearchUserDto.username);
-      if (!user)
-        throw new HttpException('未查找到相关信息', HttpStatus.BAD_REQUEST);
-
       const { password, ...data } = user;
       return {
         data,
