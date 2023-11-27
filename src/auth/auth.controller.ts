@@ -14,7 +14,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import type { Response, Request } from 'express';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { authToken } from './auth.decorator';
+import { authToken, authUser } from './auth.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Controller('auth')
@@ -25,12 +25,12 @@ export class AuthController {
   @Post('login')
   @UseGuards(AuthGuard('local'))
   @ApiOperation({ summary: '登录' })
-  login(@Body() createAuthDto: CreateAuthDto, @Session() Session) {
-    return this.authService.login(
-      createAuthDto.username,
-      createAuthDto.password,
-      Session,
-    );
+  login(
+    @Body() createAuthDto: CreateAuthDto,
+    @authUser() User,
+    @Session() Session,
+  ) {
+    return this.authService.login(createAuthDto, User, Session);
   }
 
   @Post('register')
@@ -64,6 +64,7 @@ export class AuthController {
   createCode(@Res() res: Response, @Session() session) {
     const captch = this.authService.Code();
     session.code = captch.text;
+    console.log(session.code);
     res.set('Content-Type', 'image/svg+xml');
     res.send(captch.data);
   }

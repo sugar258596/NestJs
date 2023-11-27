@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 import * as svgCaptcha from 'svg-captcha';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
@@ -20,18 +21,17 @@ export class AuthService {
   ) {}
 
   /**
-   *
-   * @param username 用户名
-   * @param pass  用户密码
-   * @param Session  Session信息
-   * @returns {Promise{data,access_token,message}} 登录后的放回信息
+   * 登录
+   * @param createAuthDto 输入的用户信息
+   * @param userInfo 数据库查找到的用户信息
+   * @param Session session
+   * @returns
    */
-  async login(username: string, pass: string, Session?) {
-    // if (!this.createuser(CreateAuthDto.swxCode, Session)) return;
-    const user = await this.UserService.createSQL(username);
-    if (user?.password !== pass)
+  async login(createAuthDto: CreateAuthDto, userInfo: CreateUserDto, Session) {
+    if (!this.createuser(createAuthDto.swxCode, Session)) return;
+    if (createAuthDto.password !== userInfo.password)
       throw new UnauthorizedException('账号或者密码错误');
-    const { password, ...data } = user;
+    const { password, ...data } = userInfo;
     return {
       data,
       access_token: await this.JwtService.signAsync(data),
@@ -78,7 +78,9 @@ export class AuthService {
    */
 
   createuser(code: string, Session) {
-    if (!Session.code)
+    console.log(Session.code);
+
+    if (Session && !Session.code)
       throw new HttpException('请先获取验证码', HttpStatus.FORBIDDEN);
     if (Session.code.toLocaleLowerCase() !== code.toLocaleLowerCase())
       throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);

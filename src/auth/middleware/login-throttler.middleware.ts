@@ -10,7 +10,7 @@ import type { Request, Response, NextFunction } from 'express';
 export class LoginThrottlerMiddleware implements NestMiddleware {
   private count = 0;
   private blocked = false;
-  private Max = 2;
+  private Max = 1000;
   private time = 2;
 
   use(req: Request, res: Response, next: NextFunction) {
