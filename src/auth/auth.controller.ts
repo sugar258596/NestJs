@@ -15,6 +15,7 @@ import type { Response, Request } from 'express';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { authToken } from './auth.decorator';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -33,7 +34,7 @@ export class AuthController {
   }
 
   @Post('register')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '注册' })
   register(
     @authToken('token') token,
@@ -44,7 +45,7 @@ export class AuthController {
   }
 
   @Post('logOut')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '退出' })
   logOut(@authToken('token') token, @Session() session, @Req() req: Request) {
     return this.authService.logOut(req, session, token);
