@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import type { Response, Request } from 'express';
-import { whitelist } from '../strategy/constants';
+import { whitelist } from '../strategy/jwt.constants';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
