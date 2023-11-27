@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
-import { jwtConstants } from '../strategy/constants';
+import { jwtConstants } from './strategy/constants';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { LocalStrategy } from './strategy/local.strategy';
 import { LoginThrottlerMiddleware } from './middleware/login-throttler.middleware';

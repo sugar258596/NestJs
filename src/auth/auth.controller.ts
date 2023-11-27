@@ -19,6 +19,7 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Controller('auth')
 @ApiTags('auth')
+@UseGuards(JwtAuthGuard)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -34,7 +35,6 @@ export class AuthController {
   }
 
   @Post('register')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '注册' })
   register(
     @authToken('token') token,
@@ -45,7 +45,6 @@ export class AuthController {
   }
 
   @Post('logOut')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '退出' })
   logOut(@authToken('token') token, @Session() session, @Req() req: Request) {
     return this.authService.logOut(req, session, token);
