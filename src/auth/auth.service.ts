@@ -39,7 +39,7 @@ export class AuthService {
       createAuthDto.password,
       userInfo.password,
     );
-    if (savedHashedPassword)
+    if (!savedHashedPassword)
       throw new UnauthorizedException('账号或者密码错误');
     const { password, ...data } = userInfo;
     return {
