@@ -90,25 +90,19 @@ export class UserService {
    * @param {Object} createUserDto 用户信息对象
    * @param {string} createUserDto.name 用户名
    * @param {string} createUserDto.password 用户密码
+   * @param {string} createUserDto.Email 用户密码
    * @returns  {Promise<User>} 返回添加后的用户信息
    */
   async addUser(createUserDto: User) {
-    const data = new User();
-    data.username = createUserDto.username;
-    data.password = createUserDto.password;
     const databaseQuery = await this.create(createUserDto);
     if (databaseQuery) {
       throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST);
     }
-    try {
-      await this.test.save(data);
-      return {
-        data: [],
-        message: '用户已添加成功',
-      };
-    } catch {
-      throw new HttpException('添加用户失败', HttpStatus.BAD_REQUEST);
-    }
+    const data = new User();
+    data.username = createUserDto.username;
+    data.password = createUserDto.password;
+    data.Email = createUserDto.Email;
+    return this.AddMethod(data, '用户添加');
   }
 
   /**
@@ -119,7 +113,7 @@ export class UserService {
    */
   async create(SearchUserDto: SearchUserDto) {
     try {
-      const user = await this.createSQL(SearchUserDto.username);
+      const user = await this.createMethod(SearchUserDto.username);
       const { password, ...data } = user;
       return {
         data,
@@ -135,7 +129,7 @@ export class UserService {
    * @param username 用户名
    * @returns  {Promise<User>} 返回查询后的用户信息
    */
-  async createSQL(username: string) {
+  async createMethod(username: string) {
     try {
       const user = await this.test
         .createQueryBuilder('user')
@@ -145,6 +139,23 @@ export class UserService {
       return user;
     } catch (err) {
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * user表添加数据的方法
+   * @param data 添加的数据
+   * @param message 提示信息
+   */
+
+  async AddMethod(data: any, message?: string) {
+    try {
+      await this.test.save(data);
+      return {
+        message: message + '成功',
+      };
+    } catch {
+      throw new HttpException(message + '失败', HttpStatus.BAD_REQUEST);
     }
   }
 }
