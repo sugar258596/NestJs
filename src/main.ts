@@ -2,9 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import * as session from 'express-session';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import * as dotenv from 'dotenv';
 
-const post: number = 3000;
 async function bootstrap() {
+  dotenv.config();
   const app = await NestFactory.create(AppModule);
 
   // session 配置
@@ -30,6 +31,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('docs', app, document);
-  await app.listen(post);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
