@@ -11,7 +11,7 @@ import { ServerInfoService } from '../common/serverInfo.service';
   imports: [
     MulterModule.register({
       storage: diskStorage({
-        destination: join(__dirname, '/images'), //上传路径地址
+        destination: join(__dirname, '../src/images'), //上传路径地址
         filename: (_, file, callback) => {
           const fileName = `${
             new Date().getTime() + extname(file.originalname)
