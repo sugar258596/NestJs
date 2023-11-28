@@ -30,6 +30,7 @@ export class HttpFilter implements ExceptionFilter {
           ? info.message[0]
           : info.message
         : info;
+
     response.status(status).json({
       code: status,
       message,
