@@ -1,12 +1,20 @@
 import { NestFactory } from '@nestjs/core';
-import * as session from 'express-session';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
+
 import { AppModule } from './app.module';
+
+import * as session from 'express-session';
 import * as dotenv from 'dotenv';
+import { join } from 'path';
 
 async function bootstrap() {
   dotenv.config();
-  const app = await NestFactory.create(AppModule);
+
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.useStaticAssets(join(__dirname, 'images'), {
+    prefix: '/upload',
+  });
 
   // session 配置
   app.use(

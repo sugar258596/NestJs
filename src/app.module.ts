@@ -8,6 +8,7 @@ import { HttpFilter } from './common/filter.exception';
 import { AddressModule } from './address/address.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
     UserModule,
     AddressModule,
     AuthModule,
+    UploadModule,
   ],
   providers: [
     {
