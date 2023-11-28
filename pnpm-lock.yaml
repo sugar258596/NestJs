@@ -56,6 +56,9 @@ dependencies:
   passport-local:
     specifier: ^1.0.0
     version: 1.0.0
+  qcloudsms_js:
+    specifier: ^0.1.1
+    version: 0.1.1
   reflect-metadata:
     specifier: ^0.1.13
     version: 0.1.13
@@ -5024,6 +5027,10 @@ packages:
   /pure-rand@6.0.4:
     resolution: {integrity: sha512-LA0Y9kxMYv47GIPJy6MI84fqTd2HmYZI83W/kM/SkKfDlajnZYfmXFTxkbY+xSBPkLJxltMa9hIkmdc29eguMA==}
     dev: true
+
+  /qcloudsms_js@0.1.1:
+    resolution: {integrity: sha512-ewdlD32XF0BkV5sGNCFHCR9FSf6fi6PijJGX1YkowFziycYUyoCThDWKM0aeZG6kSQ1y8qHHBYFhAl7JTSlhuQ==}
+    dev: false
 
   /qs@6.11.0:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
