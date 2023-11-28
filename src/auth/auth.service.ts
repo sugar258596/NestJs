@@ -4,18 +4,21 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { CreateAuthDto, RegisterDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import * as svgCaptcha from 'svg-captcha';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { Request } from 'express';
+import { User } from '../user/entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
-  private blacklistedTokens: Set<string> = new Set();
   constructor(
+    @InjectRepository(User) private readonly user: Repository<User>,
     private JwtService: JwtService,
     private readonly UserService: UserService,
   ) {}
@@ -87,22 +90,17 @@ export class AuthService {
     return true;
   }
 
-  async register(session, token: string) {
-    if (
-      session &&
-      session.blacklistedTokens &&
-      session.blacklistedTokens.includes(token)
-    ) {
-      throw new UnauthorizedException('已过期请重新登录');
-    }
-    try {
-      const decodedToken = await this.JwtService.verify(token);
-      return {
-        message: decodedToken,
-      };
-    } catch (error) {
-      throw new UnauthorizedException('已过期请重新登录');
-    }
+  async register(createAuthDto: RegisterDto) {
+    const { username, password, SecondaryPassword, Email } = createAuthDto;
+    const user = await this.UserService.createMethod(username);
+    if (user) throw new HttpException('用户已存在', HttpStatus.FORBIDDEN);
+    if (password !== SecondaryPassword)
+      new HttpException('两次密码不一致', HttpStatus.FORBIDDEN);
+    const data = new User();
+    data.username = username;
+    data.password = password;
+    data.Email = Email;
+    return this.UserService.AddMethod(data, '注册');
   }
 
   /**
