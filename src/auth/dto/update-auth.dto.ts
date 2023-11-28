@@ -31,6 +31,6 @@ export class RegisteAuthDto extends PartialType(RegisterDto) {
   @Matches(/^(\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*|\d{11})$/, {
     message: '请输入有效的邮箱或手机号码',
   })
-  @IsNotEmpty({ message: '邮箱不能为空' })
+  @IsNotEmpty({ message: '邮箱或手机号码不能为空' })
   Email: string;
 }

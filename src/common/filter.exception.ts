@@ -22,11 +22,14 @@ export class HttpFilter implements ExceptionFilter {
 
     const status = exception.getStatus();
 
-    const message =
-      typeof exception.getResponse() == 'object'
-        ? (exception.getResponse() as any).message[0].toString()
-        : (exception.getResponse() as any);
+    const info = exception.getResponse() as any;
 
+    const message =
+      typeof info == 'object'
+        ? Array.isArray(info.message)
+          ? info.message[0]
+          : info.message
+        : info;
     response.status(status).json({
       code: status,
       message,

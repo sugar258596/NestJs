@@ -4,16 +4,19 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import * as svgCaptcha from 'svg-captcha';
+import { Request } from 'express';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+
 import { CreateAuthDto, RegisterDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import * as svgCaptcha from 'svg-captcha';
-import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
-import { Request } from 'express';
 import { User } from '../user/entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +35,11 @@ export class AuthService {
    */
   async login(createAuthDto: CreateAuthDto, userInfo: CreateUserDto, Session) {
     if (!this.createuser(createAuthDto.swxCode, Session)) return;
-    if (createAuthDto.password !== userInfo.password)
+    const savedHashedPassword = await bcrypt.compare(
+      createAuthDto.password,
+      userInfo.password,
+    );
+    if (savedHashedPassword)
       throw new UnauthorizedException('账号或者密码错误');
     const { password, ...data } = userInfo;
     return {
@@ -98,7 +105,7 @@ export class AuthService {
       new HttpException('两次密码不一致', HttpStatus.FORBIDDEN);
     const data = new User();
     data.username = username;
-    data.password = password;
+    data.password = await bcrypt.hash(password, 10);
     data.Email = Email;
     return this.UserService.AddMethod(data, '注册');
   }
