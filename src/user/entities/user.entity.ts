@@ -55,6 +55,14 @@ export class User {
   })
   Email: string;
 
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    default: 'default-avatar-url', // 设置默认值
+    comment: '头像',
+  })
+  avatar?: string;
+
   @CreateDateColumn({
     type: 'timestamp',
     comment: '创建时间',
