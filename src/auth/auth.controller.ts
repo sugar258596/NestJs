@@ -8,15 +8,16 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+
+import type { Response, Request } from 'express';
+
 import { AuthService } from './auth.service';
 import { CreateAuthDto, RegisterDto } from './dto/create-auth.dto';
 import { UpdateAuthDto, RegisteAuthDto } from './dto/update-auth.dto';
-import type { Response, Request } from 'express';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
-import { authToken, authUser } from './auth.decorator';
+import { authToken, authUser } from '../decorator/auth.decorator';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
-import { SmsService } from './strategy/SmsService';
 
 @Controller('auth')
 @ApiTags('auth')

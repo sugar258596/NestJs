@@ -25,7 +25,7 @@ import {
 } from './dto/create-address.dto';
 import { UpdateAddressDto, UpdataPagingDto } from './dto/update-address.dto';
 
-import { authUser } from '../auth/auth.decorator';
+import { authUser } from '../decorator/auth.decorator';
 
 @Controller('address')
 @ApiTags('Address')
