@@ -25,16 +25,22 @@ import {
 } from './dto/create-address.dto';
 import { UpdateAddressDto, UpdataPagingDto } from './dto/update-address.dto';
 
+import { authUser } from '../auth/auth.decorator';
+
 @Controller('address')
 @ApiTags('Address')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}
 
   @Post()
-  @ApiOperation({ summary: '添加地址' })
+  @ApiOperation({ summary: '当前用户下添加地址' })
   @ApiQuery({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
-  create(@Body() createAddressDto: CreateAddressDto, @Query() id: number) {
-    return this.addressService.create(createAddressDto, id);
+  create(
+    @Body() createAddressDto: CreateAddressDto,
+    @authUser() User,
+    @Query() id: number,
+  ) {
+    return this.addressService.create(createAddressDto, User, id);
   }
 
   @Get()
