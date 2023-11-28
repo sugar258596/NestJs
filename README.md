@@ -166,3 +166,30 @@ npm install --save @nestjs/typeorm typeorm mysql2
 | validationError.target  | boolean  | 指示目标是否应在 ValidationError 中公开                                               |
 | validationError.value   | boolean  | 指示是否应在 ValidationError 中公开经过验证的值                                       |
 | stopAtFirstError        | boolean  | 当设置为 true 时，给定属性的验证将在遇到第一个错误后停止。 默认为假                   |
+
+### 图片上传
+
+**需要用到 安装 @nestjs/multer 模块和multer依赖**
+
+```ts
+  imports: [
+    MulterModule.register({ // 同步上传
+      storage: diskStorage({
+        destination: join(__dirname, '/images'), //上传路径地址
+        filename: (req, file, callback) => {
+          const fileName = `${
+            new Date().getTime() + extname(file.originalname)
+          }`;
+          return callback(null, fileName);
+        },
+      }),
+    }),
+  ],
+
+  -----
+
+  @UseInterceptors(FileInterceptor('file'))
+  create(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+  }
+```
