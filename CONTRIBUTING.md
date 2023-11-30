@@ -32,6 +32,12 @@ Commit messages 请遵循[conventional-changelog 标准](https://www.conventiona
 - perf: 性能优化
 - test: 单元测试
 - chore: 其他不修改 src 或测试文件的提交
+- build: 构建流程、外部依赖变更 (如升级 npm 包、修改打包配置等)
+- ci: 修改 CI 配置、脚本
+- revert: 回滚 commit
+- wip： 正在开发中
+- workflow：工作流程改进
+- types:类型定义文件修改
 
 ## License
 
