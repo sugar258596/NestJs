@@ -9,17 +9,17 @@ import { ServerInfoService } from '../common/serverInfo.service';
   controllers: [UploadController],
   providers: [UploadService, ServerInfoService],
   imports: [
-    MulterModule.register({
-      storage: diskStorage({
-        destination: join(__dirname, '../src/images/upload'), //上传路径地址
-        filename: (_, file, callback) => {
-          const fileName = `${
-            new Date().getTime() + extname(file.originalname)
-          }`;
-          return callback(null, fileName);
-        },
-      }),
-    }),
+    // MulterModule.register({
+    //   storage: diskStorage({
+    //     destination: join(__dirname, '../src/images/upload'), //上传路径地址
+    //     filename: (_, file, callback) => {
+    //       const fileName = `${
+    //         new Date().getTime() + extname(file.originalname)
+    //       }`;
+    //       return callback(null, fileName);
+    //     },
+    //   }),
+    // }),
   ],
 })
 export class UploadModule {}

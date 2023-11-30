@@ -17,4 +17,10 @@ export class UploadController {
   create(@UploadedFile() file: Express.Multer.File) {
     return this.uploadService.create(file);
   }
+
+  @Post('drawing')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    return this.uploadService.uploadToGitHub(file);
+  }
 }
