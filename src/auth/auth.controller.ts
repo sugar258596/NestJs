@@ -66,4 +66,10 @@ export class AuthController {
     res.set('Content-Type', 'image/svg+xml');
     res.send(captch.data);
   }
+
+  @Get('userInfo')
+  @ApiOperation({ summary: '获取用户信息' })
+  userInfo(@authUser() User) {
+    return this.authService.userInfo(User);
+  }
 }

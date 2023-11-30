@@ -33,7 +33,7 @@ export class AuthService {
    * @param Session session
    * @returns
    */
-  async login(createAuthDto: CreateAuthDto, userInfo: CreateUserDto, Session) {
+  async login(createAuthDto: CreateAuthDto, userInfo: User, Session) {
     if (!this.createuser(createAuthDto.swxCode, Session)) return;
     const savedHashedPassword = await bcrypt.compare(
       createAuthDto.password,
@@ -43,8 +43,10 @@ export class AuthService {
       throw new UnauthorizedException('账号或者密码错误');
     const { password, ...data } = userInfo;
     return {
-      data,
-      access_token: await this.JwtService.signAsync(data),
+      data: {
+        userId: data.id,
+        token: await this.JwtService.signAsync(data),
+      },
       message: '登录成功',
     };
   }
@@ -62,7 +64,7 @@ export class AuthService {
 
   Code(
     size: number = 4,
-    noise: number = 4,
+    noise: number = 3,
     fontSize: number = 50,
     width: number = 100,
     height: number = 48,
@@ -88,10 +90,8 @@ export class AuthService {
    */
 
   createuser(code: string, Session) {
-    console.log(Session.code);
-
     if (Session && !Session.code)
-      throw new HttpException('请先获取验证码', HttpStatus.FORBIDDEN);
+      throw new HttpException('请先获取验证码', HttpStatus.BAD_REQUEST);
     if (Session.code.toLocaleLowerCase() !== code.toLocaleLowerCase())
       throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
     return true;
@@ -117,6 +117,18 @@ export class AuthService {
     session.blacklistedTokens = [...(session.blacklistedTokens || []), token];
     return {
       message: '退出成功',
+    };
+  }
+
+  /**
+   *  获取用户信息
+   * @param user token，存储的用户信息
+   */
+  userInfo(user: User) {
+    const { exp, iat, ...data } = user as any;
+    return {
+      data,
+      message: '成功获取',
     };
   }
 }
