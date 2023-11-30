@@ -4,16 +4,16 @@ import {
   Injectable,
   NestMiddleware,
 } from '@nestjs/common';
-import type { Request, Response, NextFunction } from 'express';
+import type { NextFunction } from 'express';
 
 @Injectable()
 export class LoginThrottlerMiddleware implements NestMiddleware {
   private count = 0;
   private blocked = false;
-  private Max = 1000;
+  private Max = 5;
   private time = 2;
 
-  use(req: Request, res: Response, next: NextFunction) {
+  use(_, __, next: NextFunction) {
     if (this.blocked)
       throw new HttpException('稍后再试!!', HttpStatus.TOO_MANY_REQUESTS);
     this.count++;
