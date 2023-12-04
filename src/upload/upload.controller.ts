@@ -4,23 +4,24 @@ import {
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
-import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+
+import { UploadService } from './upload.service';
+import { ImageUploadDecorator } from '../decorator/upload.decorator';
 
 @Controller('upload')
 export class UploadController {
-  private file = process.env.fileName;
   constructor(private readonly uploadService: UploadService) {}
 
   @Post('single')
-  @UseInterceptors(FileInterceptor('file'))
+  @ImageUploadDecorator('../src/images/upload')
   create(@UploadedFile() file: Express.Multer.File) {
     return this.uploadService.create(file);
   }
 
   @Post('drawing')
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
+  uploadFile(@UploadedFile() file) {
     return this.uploadService.uploadToGitHub(file);
   }
 }

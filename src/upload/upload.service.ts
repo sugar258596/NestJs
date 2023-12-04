@@ -25,8 +25,6 @@ export class UploadService {
     const agreement = process.env.AGREEMENT;
     const prefix = process.env.FILE_PREFIX;
     const url = `${agreement}://${localIP}${prefix}/${filename}`;
-    console.log(file);
-
     return {
       data: {
         url,
