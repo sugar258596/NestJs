@@ -14,7 +14,7 @@ export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
   @Post('single')
-  @ImageUploadDecorator('../src/images/upload')
+  @ImageUploadDecorator('/images')
   create(@UploadedFile() file: Express.Multer.File) {
     return this.uploadService.create(file);
   }
