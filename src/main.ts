@@ -12,7 +12,7 @@ async function bootstrap() {
   dotenv.config();
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useStaticAssets(join(__dirname, '../src/images/upload'), {
+  app.useStaticAssets(join(__dirname, '/images'), {
     prefix: process.env.FILE_PREFIX,
   });
   app.useStaticAssets(join(__dirname, '../src/images/static'), {
