@@ -13,8 +13,6 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { CreateAuthDto, RegisterDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
-import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 

@@ -12,10 +12,8 @@ import {
 import {
   ApiTags,
   ApiOperation,
-  ApiResponse,
-  ApiBody,
-  ApiParam,
   ApiQuery,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { AddressService } from './address.service';
 import {
@@ -29,6 +27,7 @@ import { authUser } from '../decorator/auth.decorator';
 
 @Controller('address')
 @ApiTags('Address')
+@ApiBearerAuth('access-token')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}
 

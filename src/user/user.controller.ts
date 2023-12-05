@@ -6,9 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Res,
-  Req,
-  Session,
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
@@ -19,6 +16,7 @@ import {
   ApiOperation,
   ApiParam,
   ApiQuery,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto, SearchUserDto, pagingDto } from './dto/create-user.dto';
@@ -26,6 +24,7 @@ import { UpdateUserDto, UpdataPagingDto } from './dto/update-user.dto';
 
 @Controller('user')
 @ApiTags('user')
+@ApiBearerAuth('access-token')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
