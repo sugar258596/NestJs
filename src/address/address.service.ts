@@ -48,11 +48,9 @@ export class AddressService {
     }
 
     try {
-      let a = await this.Add.save(address);
-      console.log(a);
-
+      let data = await this.Add.save(address);
       return {
-        data: [],
+        data,
         message: '地址已添加成功',
       };
     } catch (err) {
@@ -69,14 +67,16 @@ export class AddressService {
   async findAll(pagingDto: pagingDto) {
     const { page, pagination } = pagingDto;
     try {
-      const data = await this.Add.find({
+      const list = await this.Add.find({
         skip: page ? page : 0,
         take: pagination ? pagination : 10,
       });
       return {
-        data,
+        data: {
+          list,
+        },
         message: '查询成功',
-        length: data.length,
+        length: list.length,
       };
     } catch (err) {
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
@@ -94,7 +94,7 @@ export class AddressService {
   async find(SearchDto: SearchDto) {
     const { name, page, pagination } = SearchDto;
     try {
-      const [data, total] = await this.Add.createQueryBuilder()
+      const [list, total] = await this.Add.createQueryBuilder()
         .where([
           { addressName: ILike(`%${name}%`) },
           { address: ILike(`%${name}%`) },
@@ -105,7 +105,9 @@ export class AddressService {
         .getManyAndCount();
 
       return {
-        data,
+        data: {
+          list,
+        },
         message: '查询成功',
         length: total,
       };
