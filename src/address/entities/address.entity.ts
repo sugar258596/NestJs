@@ -27,9 +27,7 @@ export class Address {
     comment: '邮政编码',
   })
   PostalCode?: number;
-  @Column({
-    comment: '用户ID',
-  })
+
   @Column({
     type: 'enum',
     enum: Static,

@@ -32,24 +32,13 @@ export class AddressController {
   constructor(private readonly addressService: AddressService) {}
 
   @Post()
-  @ApiOperation({ summary: '当前用户下添加地址' })
+  @ApiOperation({ summary: '根据用户id,为用户添加地址' })
   @ApiQuery({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
-  create(
-    @Body() createAddressDto: CreateAddressDto,
-    @authUser() User,
-    @Query() id: number,
-  ) {
-    return this.addressService.create(createAddressDto, User, id);
+  create(@Body() createAddressDto: CreateAddressDto, @Query() id: number) {
+    return this.addressService.create(createAddressDto, id);
   }
 
   @Get()
-  @ApiOperation({ summary: '查询全部' })
-  @ApiQuery({ type: UpdataPagingDto })
-  findAll(@Query() pagingDto: pagingDto) {
-    return this.addressService.findAll(pagingDto);
-  }
-
-  @Get('search')
   @ApiOperation({ summary: '地址查询' })
   findOne(@Query() SearchDto: SearchDto) {
     return this.addressService.find(SearchDto);

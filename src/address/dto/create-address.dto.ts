@@ -35,6 +35,7 @@ export class SearchDto extends pagingDto {
   @ApiProperty({
     example: '糖',
     description: '可以通过昵称，电话号码，模糊地址查询',
+    required: false,
   })
   name: string;
 

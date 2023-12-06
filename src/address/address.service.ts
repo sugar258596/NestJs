@@ -26,27 +26,16 @@ export class AddressService {
    * @param {string} createAddressDto.phone - 电话号码
    * @param {string} createAddressDto.address - 地址
    * @param {number} createAddressDto.PostalCode - 邮政编号
-   * @param {User} userInfo - 当前用户的信息
    * @param {number} [id] - 传递的用户id（可选）
    * @returns
    */
-  async create(
-    createAddressDto: CreateAddressDto,
-    userInfo: User,
-    id?: number,
-  ) {
+  async create(createAddressDto: CreateAddressDto, id?: number) {
     const address = new Address();
     Object.keys(createAddressDto).forEach((e) => {
       address[e] = createAddressDto[e];
     });
-
-    if (Object.keys(id).length > 0) {
-      const { data } = await this.userService.findOne(id);
-      address.user = data;
-    } else {
-      address.user = userInfo;
-    }
-
+    const { data } = await this.userService.findOne(id);
+    address.user = data;
     try {
       let data = await this.Add.save(address);
       return {
@@ -94,24 +83,24 @@ export class AddressService {
   async find(SearchDto: SearchDto) {
     const { name, page, pagination } = SearchDto;
     try {
-      const [list, total] = await this.Add.createQueryBuilder()
-        .where([
-          { addressName: ILike(`%${name}%`) },
-          { address: ILike(`%${name}%`) },
-          { phone: name },
-        ])
-        .skip(page ? page : 0)
-        .take(pagination ? pagination : 10)
-        .getManyAndCount();
-
+      const queryBuilder = this.Add.createQueryBuilder();
+      name
+        ? queryBuilder.where([
+            { addressName: ILike(`%${name}%`) },
+            { address: ILike(`%${name}%`) },
+            { phone: name },
+          ])
+        : queryBuilder.where('addressName IS NOT NULL');
+      queryBuilder.skip(page ? page : 0).take(pagination ? pagination : 10);
+      const [List, length] = await queryBuilder.getManyAndCount();
       return {
-        data: {
-          list,
-        },
+        data: { List },
         message: '查询成功',
-        length: total,
+        length,
       };
     } catch (err) {
+      console.log(err);
+
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
