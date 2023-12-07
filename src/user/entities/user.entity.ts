@@ -59,7 +59,7 @@ export class User {
     type: 'varchar',
     length: 6000,
     nullable: true,
-    default: `https://cn.bing.com/images/search?view=detailV2&ccid=E7Fg%2bgbK&id=900AE60D1535B3D61982ABDA891683CDAF845F87&thid=OIP.E7Fg-gbKIdj6qCSTdfDAqAAAAA&mediaurl=https%3a%2f%2fimg.zcool.cn%2fcommunity%2f0177b355ed01bc6ac7251df8f6be5a.png%402o.png&exph=288&expw=288&q=%e9%bb%98%e8%ae%a4%e5%a4%b4%e5%83%8f&simid=608031691692008415&FORM=IRPRST&ck=AF995E183A1FD382FAD7714D64AD06D6&selectedIndex=184`, // 设置默认值
+    default: `https://raw.githubusercontent.com/sugar258596/DrawingBed/main/image-nest/1701848739017.png`, // 设置默认值
     comment: '头像',
   })
   avatar?: string;
