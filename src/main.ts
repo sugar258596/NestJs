@@ -5,18 +5,21 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 
 import * as session from 'express-session';
-import * as dotenv from 'dotenv';
 import { join } from 'path';
 
 async function bootstrap() {
-  dotenv.config();
+  if (process.env.NODE_ENV === 'development') {
+    console.log('当前是开发环境', process.env.SERVET_PORT);
+  } else {
+    console.log('当前是生产环境', process.env.GITHUB_TOKEN);
+  }
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useStaticAssets(join(__dirname, '/images'), {
-    prefix: process.env.FILE_PREFIX,
+    prefix: process.env.SERVET_FILE_PREFIX,
   });
   app.useStaticAssets(join(__dirname, '../src/images/static'), {
-    prefix: process.env.FILE_STATIC,
+    prefix: process.env.SERVET_FILE_STATIC,
   });
 
   // session 配置
@@ -45,6 +48,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('docs', app, document);
-  await app.listen(process.env.PORT);
+  await app.listen(process.env.SERVET_PORT);
 }
 bootstrap();

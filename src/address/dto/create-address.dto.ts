@@ -28,7 +28,7 @@ export class CreateAddressDto {
 
 export class pagingDto {
   page: number;
-  pagination: number;
+  pageSize: number;
 }
 
 export class SearchDto extends pagingDto {
@@ -50,5 +50,5 @@ export class SearchDto extends pagingDto {
     description: '页数',
     required: false,
   })
-  pagination: number;
+  pageSize: number;
 }

@@ -41,11 +41,11 @@ export class UserService {
    * @param {Object} SearchUserDto 用户信息对象
    * @param {Object} SearchUserDto.username 用户名
    * @param {Object} SearchUserDto.page 页码
-   * @param {Object} SearchUserDto.pagination 条数
+   * @param {Object} SearchUserDto.pageSize 条数
    * @returns {Promise<{ data, message }>} 返回添加后的用户信息
    */
   async create(SearchUserDto: SearchUserDto) {
-    const { username, page, pagination } = SearchUserDto;
+    const { username, page, pageSize } = SearchUserDto;
     try {
       const queryBuilder = this.user.createQueryBuilder();
       username
@@ -54,7 +54,7 @@ export class UserService {
           })
         : queryBuilder.where('user.username IS NOT NULL');
 
-      queryBuilder.skip(page ? page : 0).take(pagination ? pagination : 10);
+      queryBuilder.skip(page ? page : 0).take(pageSize ? pageSize : 10);
       const [List, length] = await queryBuilder.getManyAndCount();
       return {
         data: { List },

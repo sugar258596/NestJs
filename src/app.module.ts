@@ -1,6 +1,6 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import MYSQl from './mysql/mysl.config';
+import { getDatabaseConfigAsync } from './mysql/mysl.config';
 import { UserModule } from './user/user.module';
 import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE, APP_GUARD } from '@nestjs/core';
 import { Response } from './common/response.interceptor';
@@ -9,14 +9,25 @@ import { AddressModule } from './address/address.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 import { UploadModule } from './upload/upload.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as fs from 'fs';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(MYSQl),
+    ConfigModule.forRoot({
+      load: [loadConfig],
+      isGlobal: true,
+    }),
     UserModule,
     AddressModule,
     AuthModule,
     UploadModule,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) =>
+        getDatabaseConfigAsync(configService),
+      inject: [ConfigService],
+    }),
   ],
   providers: [
     {
@@ -42,3 +53,32 @@ import { UploadModule } from './upload/upload.module';
   ],
 })
 export class AppModule {}
+
+function loadConfig() {
+  // 默认配置
+  const defaultConfig = parseEnvFile('.env');
+
+  // 环境特定配置
+  const environment = process.env.NODE_ENV;
+  const environmentConfig = parseEnvFile(`.env.${environment}`);
+
+  // 合并配置
+  console.log({ ...defaultConfig, ...environmentConfig });
+
+  return { ...defaultConfig, ...environmentConfig };
+}
+
+function parseEnvFile(filePath: string): Record<string, any> {
+  if (!fs.existsSync(filePath)) {
+    return {};
+  }
+  const envConfig = fs.readFileSync(filePath).toString();
+  const config = {};
+  envConfig.split('\n').forEach((line) => {
+    const [key, value] = line.split('=');
+    if (key && value) {
+      config[key.trim()] = value.trim();
+    }
+  });
+  return config;
+}

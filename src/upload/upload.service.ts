@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { Octokit } from '@octokit/rest';
 import { extname } from 'path';
@@ -9,12 +10,12 @@ import { ServerInfoService } from '../common/serverInfo.service';
 @Injectable()
 export class UploadService {
   private octokit: Octokit;
-  private owner = 'sugar258596';
-  private repo = 'DrawingBed';
-  private branch = 'main';
-  constructor(private readonly serverInfoService: ServerInfoService) {
+  constructor(
+    private configService: ConfigService,
+    private readonly serverInfoService: ServerInfoService,
+  ) {
     this.octokit = new Octokit({
-      auth: process.env.GITHUB_TOKEN,
+      auth: this.configService.get<string>('GITHUB_TOKEN'),
       request: { fetch: fetch },
     });
   }
@@ -22,7 +23,7 @@ export class UploadService {
   create(file: Express.Multer.File) {
     const { filename } = file;
     const localIP = this.serverInfoService.getLocalIP();
-    const agreement = process.env.AGREEMENT;
+    const agreement = process.env.SERVET_AGREEMENT;
     const prefix = process.env.FILE_PREFIX;
     const url = `${agreement}://${localIP}${prefix}/${filename}`;
     return {
@@ -40,12 +41,12 @@ export class UploadService {
     const filePath = `image-nest/${fileName}`;
     try {
       const response = await this.octokit.repos.createOrUpdateFileContents({
-        owner: this.owner,
-        repo: this.repo,
+        owner: this.configService.get<string>('GITHUB_OWNER'),
+        repo: this.configService.get<string>('GITHUB_REPO'),
         path: filePath,
         message: `Upload image ${fileName}`,
         content: contentBase64,
-        branch: this.branch,
+        branch: this.configService.get<string>('GITHUB_BRANCH'),
       });
 
       return {
@@ -56,10 +57,7 @@ export class UploadService {
         message: '上传成功',
       }; // 返回图片的 URL
     } catch (error) {
-      console.log(error);
-
-      // throw new Error('Error uploading to GitHub');
-      return false;
+      throw new Error('Error uploading to GitHub');
     }
   }
 }

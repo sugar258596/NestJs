@@ -16,7 +16,7 @@ export class UpdataPagingDto extends PartialType(pagingDto) {
     description: '页数',
     required: false,
   })
-  pagination: number;
+  pageSize: number;
 }
 
 export class UpdateSearchDto extends PartialType(SearchDto) {

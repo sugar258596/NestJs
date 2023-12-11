@@ -46,7 +46,7 @@ export class SearchUserDto {
     example: 10,
     description: '条数',
   })
-  pagination: number;
+  pageSize: number;
 }
 
 export class createCodeDto extends CreateUserDto {
@@ -59,5 +59,5 @@ export class createCodeDto extends CreateUserDto {
 
 export class pagingDto {
   page: number;
-  pagination: number;
+  pageSize: number;
 }

@@ -54,11 +54,11 @@ export class AddressService {
    */
 
   async findAll(pagingDto: pagingDto) {
-    const { page, pagination } = pagingDto;
+    const { page, pageSize } = pagingDto;
     try {
       const list = await this.Add.find({
         skip: page ? page : 0,
-        take: pagination ? pagination : 10,
+        take: pageSize ? pageSize : 10,
       });
       return {
         data: {
@@ -77,11 +77,11 @@ export class AddressService {
    * @param {SearchDto} SearchDto
    * @param {string} SearchDto.name - 昵称,电话号码,模糊地址
    * @param {number} SearchDto.page - 页码
-   * @param {number} SearchDto.pagination -页数
+   * @param {number} SearchDto.pageSize -页数
    * @returns
    */
   async find(SearchDto: SearchDto) {
-    const { name, page, pagination } = SearchDto;
+    const { name, page, pageSize } = SearchDto;
     try {
       const queryBuilder = this.Add.createQueryBuilder();
       name
@@ -91,7 +91,7 @@ export class AddressService {
             { phone: name },
           ])
         : queryBuilder.where('addressName IS NOT NULL');
-      queryBuilder.skip(page ? page : 0).take(pagination ? pagination : 10);
+      queryBuilder.skip(page ? page : 0).take(pageSize ? pageSize : 10);
       const [List, length] = await queryBuilder.getManyAndCount();
       return {
         data: { List },
