@@ -57,8 +57,8 @@ export class AddressService {
     const { page, pageSize } = pagingDto;
     try {
       const list = await this.Add.find({
-        skip: page ? page : 0,
-        take: pageSize ? pageSize : 10,
+        skip: page ? (page - 1) * pageSize : 0,
+        take: pageSize ? page * pageSize : 10,
       });
       return {
         data: {
@@ -91,7 +91,9 @@ export class AddressService {
             { phone: name },
           ])
         : queryBuilder.where('addressName IS NOT NULL');
-      queryBuilder.skip(page ? page : 0).take(pageSize ? pageSize : 10);
+      queryBuilder
+        .skip(page ? (page - 1) * pageSize : 0)
+        .take(pageSize ? page * pageSize : 10);
       const [List, length] = await queryBuilder.getManyAndCount();
       return {
         data: { List, length },
