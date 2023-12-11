@@ -63,9 +63,9 @@ export class AddressService {
       return {
         data: {
           list,
+          length: list.length,
         },
         message: '查询成功',
-        length: list.length,
       };
     } catch (err) {
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
@@ -94,9 +94,8 @@ export class AddressService {
       queryBuilder.skip(page ? page : 0).take(pageSize ? pageSize : 10);
       const [List, length] = await queryBuilder.getManyAndCount();
       return {
-        data: { List },
+        data: { List, length },
         message: '查询成功',
-        length,
       };
     } catch (err) {
       console.log(err);
@@ -120,8 +119,10 @@ export class AddressService {
       if (affected == 0)
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       return {
+        data: {
+          length: affected,
+        },
         message: '数据更新成功',
-        length: affected,
       };
     } catch (err) {
       throw new HttpException(
@@ -137,8 +138,10 @@ export class AddressService {
       if (affected == 0)
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       return {
+        data: {
+          length: affected,
+        },
         message: '数据删除成功',
-        length: affected,
       };
     } catch (err) {
       throw new HttpException(
