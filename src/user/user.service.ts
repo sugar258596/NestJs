@@ -3,7 +3,7 @@ import { SearchUserDto, pagingDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository, Like, Not } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -73,10 +73,13 @@ export class UserService {
    * @returns
    */
   async update(id: number, updateUserDto: UpdateUserDto) {
+    const { username, password } = updateUserDto;
     try {
+      const user = await this.createMethod(username);
+      if (user) throw new HttpException('用户已存在', HttpStatus.FORBIDDEN);
       const { affected } = await this.user.update(
         { id },
-        { username: updateUserDto.username, password: updateUserDto.password },
+        { username, password },
       );
       if (affected == 0)
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
