@@ -63,8 +63,6 @@ function loadConfig() {
   const environmentConfig = parseEnvFile(`.env.${environment}`);
 
   // 合并配置
-  console.log({ ...defaultConfig, ...environmentConfig });
-
   return { ...defaultConfig, ...environmentConfig };
 }
 

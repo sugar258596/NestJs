@@ -8,12 +8,6 @@ import * as session from 'express-session';
 import { join } from 'path';
 
 async function bootstrap() {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('当前是开发环境', process.env.SERVET_PORT);
-  } else {
-    console.log('当前是生产环境', process.env.GITHUB_TOKEN);
-  }
-
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useStaticAssets(join(__dirname, '/images'), {
     prefix: process.env.SERVET_FILE_PREFIX,
