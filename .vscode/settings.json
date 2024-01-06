@@ -10,7 +10,7 @@
     "editor.wordWrap": "on",
     // ESlint插件+Vscode配置，实现自动格式化修复
     "editor.codeActionsOnSave": {
-        "source.fixAll": true
+        "source.fixAll": "explicit"
     },
     // 关闭实现自动化格式
     "editor.formatOnSave": true,
