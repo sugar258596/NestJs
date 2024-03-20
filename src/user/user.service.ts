@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository, Like } from 'typeorm';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
   constructor(
@@ -147,7 +147,9 @@ export class UserService {
    */
 
   async AddMethod(data: any, message?: string) {
+    const { password } = data;
     try {
+      data.password = await bcrypt.hash(password, 10);
       await this.user.save(data);
       return {
         message: message + '成功',
