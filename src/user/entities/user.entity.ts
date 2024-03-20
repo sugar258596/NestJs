@@ -7,7 +7,6 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Static } from '../../enum/SQL';
-import { Address } from '../../address/entities/address.entity';
 
 // 定义实体类
 /**
@@ -82,7 +81,4 @@ export class User {
     comment: '状态',
   })
   static?: number;
-
-  @OneToMany(() => Address, (address) => address.user)
-  addresses?: Address[];
 }

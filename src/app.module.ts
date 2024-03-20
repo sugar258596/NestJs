@@ -5,7 +5,6 @@ import { UserModule } from './user/user.module';
 import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE, APP_GUARD } from '@nestjs/core';
 import { Response } from './common/response.interceptor';
 import { HttpFilter } from './common/filter.exception';
-import { AddressModule } from './address/address.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 import { UploadModule } from './upload/upload.module';
@@ -19,7 +18,6 @@ import * as fs from 'fs';
       isGlobal: true,
     }),
     UserModule,
-    AddressModule,
     AuthModule,
     UploadModule,
     TypeOrmModule.forRootAsync({
