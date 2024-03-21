@@ -55,7 +55,7 @@ export class UserService {
         : queryBuilder.where('user.username IS NOT NULL');
 
       queryBuilder
-        .skip(page ? (page - 1) * pageSize : 0)
+        .skip(page || page == 0 ? (page - 1) * pageSize : 0)
         .take(pageSize ? page * pageSize : 10);
       const [List, length] = await queryBuilder.getManyAndCount();
       return {
@@ -63,6 +63,8 @@ export class UserService {
         message: '查询成功',
       };
     } catch (err) {
+      console.log(err);
+
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
