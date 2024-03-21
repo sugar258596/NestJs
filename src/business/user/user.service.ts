@@ -19,7 +19,7 @@ export class UserService {
    * @param {string} createUserDto.Email 用户密码
    * @returns  {Promise<User>} 返回添加后的用户信息
    */
-  async addUser(createUserDto: User) {
+  async addUser(createUserDto: UpdateUserDto) {
     const { username, password, Email } = createUserDto;
     const data = await this.user.findOne({
       where: {
@@ -63,8 +63,6 @@ export class UserService {
         message: '查询成功',
       };
     } catch (err) {
-      console.log(err);
-
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }

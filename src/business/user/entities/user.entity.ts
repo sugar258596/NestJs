@@ -6,8 +6,15 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
+
 import { Static } from '../../enum/SQL';
 
+import { ContentReview } from 'src/business/content-review/entities/content-review.entity';
+import { Reply } from 'src/business/reply/entities/reply.entity';
+import { Comment } from 'src/business/comment/entities/comment.entity';
+import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.entity';
+import { UserLike } from 'src/business/user-like/entities/user-like.entity';
+import { FoodPost } from 'src/business/food-post/entities/food-post.entity';
 // 定义实体类
 /**
    *  通过 @Entity 来标记一个实体类
@@ -81,4 +88,28 @@ export class User {
     comment: '状态',
   })
   static?: number;
+
+  // 一对多关系：一个用户可以发布多个美食分享
+  @OneToMany(() => FoodPost, (foodPost) => foodPost.user)
+  foodPosts: FoodPost[];
+
+  // 一对多关系：一个用户可以发表多个评论
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
+
+  // 一对多关系：一个用户可以点赞多个美食分享
+  @OneToMany(() => UserLike, (like) => like.user)
+  likes: UserLike[];
+
+  // 一对多关系：一个用户可以收藏多个美食分享
+  @OneToMany(() => UserFavorite, (favorite) => favorite.user)
+  favorites: UserFavorite[];
+
+  // 一对多关系：一个用户可以回复多个评论
+  @OneToMany(() => Reply, (reply) => reply.user)
+  replies: Reply[];
+
+  // 一对多关系：一个管理员可以审核多个内容
+  @OneToMany(() => ContentReview, (review) => review.admin)
+  reviews: ContentReview[];
 }
