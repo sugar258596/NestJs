@@ -3,6 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';
+import { sessionConfig, swaggerConfig } from './configure';
 
 import * as session from 'express-session';
 import { join } from 'path';
@@ -17,29 +18,10 @@ async function bootstrap() {
   });
 
   // session 配置
-  app.use(
-    session({
-      secret: 'tang',
-      name: 'tang_session',
-      cookie: {
-        maxAge: 60 * 60 * 24,
-        httpOnly: true,
-      },
-    }),
-  );
+  app.use(session(sessionConfig));
 
   // swagger 配置
-  const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
-    .setVersion('1.0')
-    .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'access-token',
-    )
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
 
   SwaggerModule.setup('docs', app, document);
   await app.listen(process.env.SERVET_PORT);
