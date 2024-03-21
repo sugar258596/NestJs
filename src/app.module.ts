@@ -1,7 +1,15 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDatabaseConfigAsync } from './mysql/mysl.config';
+
 import { UserModule } from './business/user/user.module';
+import { FoodPostModule } from './business/food-post/food-post.module';
+import { UserFavoriteModule } from './business/user-favorite/user-favorite.module';
+import { UserLikeModule } from './business/user-like/user-like.module';
+import { CommentModule } from './business/comment/comment.module';
+import { ContentReviewModule } from './business/content-review/content-review.module';
+import { ReplyModule } from './business/reply/reply.module';
+
 import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE, APP_GUARD } from '@nestjs/core';
 import { Response } from './common/response.interceptor';
 import { HttpFilter } from './common/filter.exception';
@@ -17,9 +25,15 @@ import * as fs from 'fs';
       load: [loadConfig],
       isGlobal: true,
     }),
-    UserModule,
     AuthModule,
     UploadModule,
+    UserModule,
+    FoodPostModule,
+    UserFavoriteModule,
+    UserLikeModule,
+    CommentModule,
+    ContentReviewModule,
+    ReplyModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) =>
