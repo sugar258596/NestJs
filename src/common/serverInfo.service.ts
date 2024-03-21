@@ -14,6 +14,6 @@ export class ServerInfoService {
         }
       });
     });
-    return localIP + ':' + process.env.PORT;
+    return localIP + ':' + process.env.SERVET_PORT;
   }
 }

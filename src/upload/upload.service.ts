@@ -24,7 +24,7 @@ export class UploadService {
     const { filename } = file;
     const localIP = this.serverInfoService.getLocalIP();
     const agreement = process.env.SERVET_AGREEMENT;
-    const prefix = process.env.FILE_PREFIX;
+    const prefix = process.env.SERVET_FILE_PREFIX;
     const url = `${agreement}://${localIP}${prefix}/${filename}`;
     return {
       data: {
