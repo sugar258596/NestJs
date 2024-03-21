@@ -1,7 +1,7 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDatabaseConfigAsync } from './mysql/mysl.config';
-import { UserModule } from './user/user.module';
+import { UserModule } from './business/user/user.module';
 import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE, APP_GUARD } from '@nestjs/core';
 import { Response } from './common/response.interceptor';
 import { HttpFilter } from './common/filter.exception';

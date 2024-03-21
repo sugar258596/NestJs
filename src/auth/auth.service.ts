@@ -13,8 +13,8 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { CreateAuthDto, RegisterDto } from './dto/create-auth.dto';
-import { User } from '../user/entities/user.entity';
-import { UserService } from '../user/user.service';
+import { User } from '../business/user/entities/user.entity';
+import { UserService } from '../business/user/user.service';
 
 @Injectable()
 export class AuthService {
