@@ -37,6 +37,7 @@ export class AuthService {
       createAuthDto.password,
       userInfo.password,
     );
+
     if (!savedHashedPassword)
       throw new UnauthorizedException('账号或者密码错误');
     const { password, ...data } = userInfo;
@@ -100,10 +101,10 @@ export class AuthService {
     const user = await this.UserService.createMethod(username);
     if (user) throw new HttpException('用户已存在', HttpStatus.FORBIDDEN);
     if (password !== SecondaryPassword)
-      new HttpException('两次密码不一致', HttpStatus.FORBIDDEN);
+      throw new HttpException('两次密码不一致', HttpStatus.FORBIDDEN);
     const data = new User();
     data.username = username;
-    data.password = await bcrypt.hash(password, 10);
+    data.password = password;
     data.Email = Email;
     return this.UserService.AddMethod(data, '注册');
   }
