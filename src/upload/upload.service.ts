@@ -10,6 +10,8 @@ import { ServerInfoService } from '../common/serverInfo.service';
 @Injectable()
 export class UploadService {
   private octokit: Octokit;
+  private fileImage: string;
+  private fileVideo: string;
   constructor(
     private configService: ConfigService,
     private readonly serverInfoService: ServerInfoService,
@@ -18,6 +20,8 @@ export class UploadService {
       auth: this.configService.get<string>('GITHUB_TOKEN'),
       request: { fetch: fetch },
     });
+    (this.fileImage = this.configService.get<string>('SERVET_FILE_IMG')),
+      (this.fileVideo = this.configService.get<string>('SERVET_FILE_VIDEO'));
   }
 
   create(file: Express.Multer.File) {
@@ -58,6 +62,12 @@ export class UploadService {
     }
   }
 
+  /**
+   *  @description 多文件上传
+   * @param files 上传的图片/视频 的文件列表
+   * @returns 返回上传的文件信息
+   */
+
   multiple(files: FileList) {
     if (!files)
       throw new HttpException('不能上传空文件', HttpStatus.BAD_REQUEST);
@@ -65,31 +75,32 @@ export class UploadService {
     Array.from(files).forEach((file: any) => {
       const isImage = file.mimetype.startsWith('image/');
       const isVideo = file.mimetype.startsWith('video/');
+      const { filename } = file;
       if (isImage) {
         data.push({
           filename: file.filename,
-          // imgURL: `http://127.0.0.1:${API_PORT}/xiaoluo/images/${file.filename}`,
+          imgURL: this.generateURL(this.fileImage + filename),
           size: file.size,
           type: 'image', // 添加文件类型标识
         });
       } else if (isVideo) {
         data.push({
           filename: file.filename,
-          // videoURL: `http://127.0.0.1:${API_PORT}/xiaoluo/videos/${file.filename}`,
+          imgURL: this.generateURL(this.fileVideo + filename),
           size: file.size,
           type: 'video', // 添加文件类型标识
         });
       }
     });
     return {
-      message: '123',
+      data,
     };
   }
 
   /**
    * @description 生成地址
-   * @param name
-   * @returns
+   * @param name 文件名
+   * @returns 返回文件地址
    */
   generateURL(name: string) {
     const localIP = this.serverInfoService.getLocalIP();
