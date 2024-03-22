@@ -44,8 +44,8 @@ export const MultipleImagesUploadDecorator = (
     // 上传路径地址
     destination: async (req, file: Express.Multer.File, callback) => {
       const uploadFile = file.mimetype.startsWith('video/')
-        ? 'videos'
-        : 'images';
+        ? process.env.SERVET_FILE_VIDEO
+        : process.env.SERVET_FILE_IMG;
       const folderPath = join(__dirname, path, uploadFile);
       if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath, { recursive: true });
