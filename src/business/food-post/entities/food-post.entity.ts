@@ -36,12 +36,14 @@ export class FoodPost {
   // 图片链接
   @Column({
     comment: '图片地址',
+    length: 6000,
   })
-  image: string;
+  imageList: string;
 
   // 评分
   @Column({
     comment: '评分',
+    default: 0,
   })
   rating: number;
 
