@@ -12,7 +12,6 @@ import { FoodPost } from './entities/food-post.entity';
 import { User } from '../user/entities/user.entity';
 
 import { UploadService } from 'src/upload/upload.service';
-import { UserService } from '../user/user.service';
 
 @Injectable()
 export class FoodPostService {
@@ -20,7 +19,6 @@ export class FoodPostService {
   constructor(
     @InjectRepository(FoodPost) private readonly foodPost: Repository<FoodPost>,
     private readonly UploadService: UploadService,
-    private readonly UserService: UserService,
   ) {
     this.queryBuilder = this.foodPost.createQueryBuilder();
   }
@@ -141,6 +139,30 @@ export class FoodPostService {
     } catch (err) {
       throw new HttpException(
         err || '删除失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  /**
+   * @description  id查询美食分享
+   * @param {number} id - 美食分享id
+   * @returns
+   */
+  async findOne(id: number) {
+    try {
+      this.queryBuilder.where('id = :id', { id });
+      const foodPost = await this.queryBuilder.getOne();
+      if (!foodPost)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
+      foodPost.imageList = JSON.parse(foodPost.imageList);
+      return {
+        data: foodPost,
+        message: '查询成功',
+      };
+    } catch (err) {
+      throw new HttpException(
+        err || '查询失败',
         err.status || HttpStatus.BAD_REQUEST,
       );
     }

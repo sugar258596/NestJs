@@ -8,11 +8,10 @@ import { User } from '../user/entities/user.entity';
 
 import { UploadService } from 'src/upload/upload.service';
 import { ServerInfoService } from 'src/common/serverInfo.service';
-import { UserService } from '../user/user.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([FoodPost, User])],
   controllers: [FoodPostController],
-  providers: [FoodPostService, UploadService, ServerInfoService, UserService],
+  providers: [FoodPostService, UploadService, ServerInfoService],
 })
 export class FoodPostModule {}
