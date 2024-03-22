@@ -1,20 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
+import { authUser } from 'src/decorator/auth.decorator';
+
+import { User } from '../user/entities/user.entity';
+
 @Controller('comment')
+@ApiTags('评论')
+@ApiBearerAuth('access-token')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  @ApiOperation({ summary: '添加评论' })
+  @ApiBody({ type: CreateCommentDto })
+  create(@Body() createCommentDto: CreateCommentDto, @authUser() User: User) {
+    return this.commentService.create(createCommentDto, User);
   }
 
   @Get()
-  findAll() {
-    return this.commentService.findAll();
+  @ApiOperation({ summary: '根据发布的id查询下面所属的评论' })
+  findAll(@Query('id', ParseIntPipe) id: number) {
+    return this.commentService.findAll(id);
   }
 
   @Get(':id')
