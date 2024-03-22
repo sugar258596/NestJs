@@ -3,8 +3,9 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiTags,
   ApiOperation,
@@ -14,7 +15,10 @@ import {
 } from '@nestjs/swagger';
 
 import { UploadService } from './upload.service';
-import { ImageUploadDecorator } from '../decorator/upload.decorator';
+import {
+  ImageUploadDecorator,
+  MultipleImagesUploadDecorator,
+} from '../decorator/upload.decorator';
 
 @Controller('upload')
 @ApiTags('upload')
@@ -37,7 +41,7 @@ export class UploadController {
       },
     },
   })
-  @ImageUploadDecorator('/images')
+  @ImageUploadDecorator('/images', 'file')
   create(@UploadedFile() file: Express.Multer.File) {
     return this.uploadService.create(file);
   }
@@ -60,5 +64,11 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file) {
     return this.uploadService.uploadToGitHub(file);
+  }
+
+  @Post('multiple')
+  @MultipleImagesUploadDecorator('/images/', 'files')
+  MultipleImagesUpload(@UploadedFiles() files: FileList) {
+    return this.uploadService.multiple(files);
   }
 }
