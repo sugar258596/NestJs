@@ -1,34 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ReplyService } from './reply.service';
-import { CreateReplyDto } from './dto/create-reply.dto';
+
+import { CreateReplyDto, SearchCommentDto } from './dto/create-reply.dto';
 import { UpdateReplyDto } from './dto/update-reply.dto';
+import { authUser } from 'src/decorator/auth.decorator';
 
 @Controller('reply')
+@ApiTags('回复')
+@ApiBearerAuth('access-token')
 export class ReplyController {
   constructor(private readonly replyService: ReplyService) {}
 
   @Post()
-  create(@Body() createReplyDto: CreateReplyDto) {
-    return this.replyService.create(createReplyDto);
+  @ApiOperation({ summary: '添加回复' })
+  @ApiBody({ type: CreateReplyDto })
+  create(@Body() createReplyDto: CreateReplyDto, @authUser() User) {
+    return this.replyService.create(createReplyDto, User);
   }
 
   @Get()
-  findAll() {
-    return this.replyService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.replyService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReplyDto: UpdateReplyDto) {
-    return this.replyService.update(+id, updateReplyDto);
+  @ApiOperation({ summary: '回复的回复' })
+  @ApiBody({ type: CreateReplyDto })
+  findAll(@Query() SearchCommentDto: SearchCommentDto) {
+    return this.replyService.findAll(SearchCommentDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.replyService.remove(+id);
+  @ApiOperation({ summary: '删除回复' })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.replyService.remove(id);
   }
 }
