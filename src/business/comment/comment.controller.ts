@@ -12,7 +12,7 @@ import {
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { CommentService } from './comment.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { CreateCommentDto, SearchCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 import { authUser } from 'src/decorator/auth.decorator';
@@ -34,22 +34,14 @@ export class CommentController {
 
   @Get()
   @ApiOperation({ summary: '根据发布的id查询下面所属的评论' })
-  findAll(@Query('id', ParseIntPipe) id: number) {
-    return this.commentService.findAll(id);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
+  @ApiBody({ type: SearchCommentDto })
+  findAll(@Query() SearchCommentDto: SearchCommentDto) {
+    return this.commentService.findAll(SearchCommentDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+  @ApiOperation({ summary: '删除评论' })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.commentService.remove(id);
   }
 }

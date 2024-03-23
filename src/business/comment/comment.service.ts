@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { CreateCommentDto, SearchCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,13 +12,10 @@ import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class CommentService {
-  private queryBuilder: SelectQueryBuilder<Comment>;
   constructor(
     @InjectRepository(Comment) private readonly comment: Repository<Comment>,
     private readonly FoodPostService: FoodPostService,
-  ) {
-    this.queryBuilder = this.comment.createQueryBuilder('comment');
-  }
+  ) {}
 
   /**
    * @description 添加评论
@@ -46,28 +43,77 @@ export class CommentService {
     }
   }
 
-  // 根据发布美食的id查询下面所属的评论
-  async findAll(id: number) {
-    const comments = await this.queryBuilder
-      .leftJoinAndSelect('comment.foodPost', 'foodPost')
-      .leftJoinAndSelect('comment.user', 'user')
-      .where('comment.foodPostId = :id', { id })
-      .getMany();
+  /**
+   * @description 根据发布的id查询下面所属的评论
+   * @param SearchCommentDto  - 查询评论信息
+   * @param {number} SearchCommentDto.id - 美食分享id
+   * @param {number} SearchCommentDto.page - 页码
+   * @param {number} SearchCommentDto.pageSize - 每页数量
+   * @returns
+   */
 
-    console.log(comments);
+  async findAll(SearchCommentDto: SearchCommentDto) {
+    const { id, page, pageSize } = SearchCommentDto;
 
-    return `This action returns all comment`;
+    const dotPage = page && page != 0 ? page : 0;
+    const dotPageSize = pageSize ? dotPage * pageSize : 10;
+    try {
+      const comments = await this.comment.find({
+        where: {
+          foodPost: { id },
+        },
+        relations: ['user', 'replies'],
+        skip: dotPage,
+        take: dotPageSize,
+        order: {
+          updatedAt: 'DESC',
+        },
+      });
+
+      // const queryBuilder = this.comment.createQueryBuilder('comment');
+      // const [comments, length] = await queryBuilder
+      //   .leftJoinAndSelect('comment.foodPost', 'foodPost')
+      //   .leftJoinAndSelect('comment.replies', 'replies')
+      //   .where('comment.foodPostId = :id', { id })
+      //   .getManyAndCount();
+
+      // 过滤掉user表中的敏感信息
+      comments.forEach((comment) => {
+        const { id, username, avatar } = comment.user;
+        comment.user = { id, username, avatar } as User;
+      });
+      return {
+        data: comments,
+      };
+    } catch (err) {
+      throw new HttpException('获取评论失败', HttpStatus.NOT_FOUND);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
-  }
+  /**
+   * @description 删除评论
+   * @param {number} id - 评论id
+   * @returns
+   */
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  async remove(id: number) {
+    try {
+      const queryBuilder = this.comment.createQueryBuilder('comment');
+      const { affected } = await queryBuilder
+        .where('comment.id = :id', { id })
+        .delete()
+        .execute();
+      if (!affected)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
+      return {
+        data: { affected },
+        message: '删除成功',
+      };
+    } catch (err) {
+      throw new HttpException(
+        err || '删除失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }
