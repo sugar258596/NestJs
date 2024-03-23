@@ -116,4 +116,22 @@ export class CommentService {
       );
     }
   }
+
+  // 根据评论id查询评论
+  async findOne(id: number) {
+    try {
+      const comment = await this.comment.findOne({ where: { id } });
+      if (!comment) {
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
+      }
+      return {
+        data: comment,
+      };
+    } catch (err) {
+      throw new HttpException(
+        err || '查询失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
