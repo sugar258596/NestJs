@@ -79,6 +79,7 @@ export class CommentService {
 
       return {
         data: { List },
+        message: '查询成功',
       };
     } catch (err) {
       throw new HttpException(
