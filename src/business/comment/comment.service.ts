@@ -83,7 +83,7 @@ export class CommentService {
         comment.user = { id, username, avatar } as User;
       });
       return {
-        data: comments,
+        data: { List: comments },
       };
     } catch (err) {
       throw new HttpException('获取评论失败', HttpStatus.NOT_FOUND);

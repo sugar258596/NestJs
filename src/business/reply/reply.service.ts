@@ -91,7 +91,7 @@ export class ReplyService {
       );
 
       return {
-        data: List,
+        data: { List },
         message: '查询成功',
       };
     } catch (err) {

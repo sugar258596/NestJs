@@ -107,12 +107,12 @@ export class FoodPostService {
       this.queryBuilder
         .where({ user: user.id as any })
         .orderBy('updatedAt', 'DESC');
-      const [foodPosts, length] = await this.queryBuilder.getManyAndCount();
-      foodPosts.forEach((item) => {
+      const [List, length] = await this.queryBuilder.getManyAndCount();
+      List.forEach((item) => {
         item.imageList = JSON.parse(item.imageList);
       });
       return {
-        data: { foodPosts, length },
+        data: { List, length },
         message: '查询成功',
       };
     } catch (err) {
