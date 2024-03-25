@@ -128,6 +128,7 @@ export class CommentService {
       }
       return {
         data: comment,
+        message: '查询成功',
       };
     } catch (err) {
       throw new HttpException(
