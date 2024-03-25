@@ -79,16 +79,7 @@ export class ReplyService {
       });
 
       // 处理回复列表中的用户信息
-      await Promise.all(
-        List.map(async (comment) => {
-          await Promise.all(
-            comment.replies.map(async (reply) => {
-              const replyDetails = await this.findOne(reply.id);
-              reply.user = replyDetails.data.user; // 将回复的用户信息添加到回复对象中
-            }),
-          );
-        }),
-      );
+      await this.CommentService.replyOneUser(List);
 
       return {
         data: { List },
@@ -124,28 +115,6 @@ export class ReplyService {
       throw new HttpException(
         err || '删除失败',
         err.status || HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
-  // 查询单个回复信息
-  async findOne(replyId: number) {
-    try {
-      const List = await this.reply.findOne({
-        where: { id: replyId },
-        relations: ['user'],
-      });
-      const { id, username, avatar } = List.user;
-      List.user = { id, username, avatar } as User;
-
-      return {
-        data: List,
-        message: '查询成功',
-      };
-    } catch (err) {
-      throw new HttpException(
-        err || '查询失败',
-        err.status || HttpStatus.NOT_FOUND,
       );
     }
   }

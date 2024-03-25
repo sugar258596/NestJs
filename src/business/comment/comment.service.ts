@@ -3,18 +3,20 @@ import { CreateCommentDto, SearchCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { Comment } from './entities/comment.entity';
 import { FoodPostService } from '../food-post/food-post.service';
-
+import { ReplyService } from '../reply/reply.service';
+import { Reply } from '../reply/entities/reply.entity';
 import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectRepository(Comment) private readonly comment: Repository<Comment>,
-    private readonly FoodPostService: FoodPostService,
+    @InjectRepository(Reply) private readonly reply: Repository<Reply>,
+    private readonly FoodPostService: FoodPostService, // private readonly ReplyService: ReplyService,
   ) {}
 
   /**
@@ -58,35 +60,31 @@ export class CommentService {
     const dotPage = page && page != 0 ? page : 0;
     const dotPageSize = pageSize ? dotPage * pageSize : 10;
     try {
-      const comments = await this.comment.find({
+      const List = await this.comment.find({
         where: {
           foodPost: { id },
         },
         relations: ['user', 'replies'],
         skip: dotPage,
         take: dotPageSize,
-        order: {
-          updatedAt: 'DESC',
-        },
+        order: { updatedAt: 'DESC' },
       });
-
-      // const queryBuilder = this.comment.createQueryBuilder('comment');
-      // const [comments, length] = await queryBuilder
-      //   .leftJoinAndSelect('comment.foodPost', 'foodPost')
-      //   .leftJoinAndSelect('comment.replies', 'replies')
-      //   .where('comment.foodPostId = :id', { id })
-      //   .getManyAndCount();
-
       // 过滤掉user表中的敏感信息
-      comments.forEach((comment) => {
+      List.forEach((comment) => {
         const { id, username, avatar } = comment.user;
         comment.user = { id, username, avatar } as User;
       });
+      // 处理回复列表中的用户信息
+      await this.replyOneUser(List);
+
       return {
-        data: { List: comments },
+        data: { List },
       };
     } catch (err) {
-      throw new HttpException('获取评论失败', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        err || '查询失败',
+        err.status || HttpStatus.NOT_FOUND,
+      );
     }
   }
 
@@ -117,7 +115,11 @@ export class CommentService {
     }
   }
 
-  // 根据评论id查询评论
+  /**
+   * @description 根据评论id查询评论
+   * @param {number} id 评论id
+   * @returns
+   */
   async findOne(id: number) {
     try {
       const comment = await this.comment.findOne({ where: { id } });
@@ -133,5 +135,37 @@ export class CommentService {
         err.status || HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  /**
+   * @description
+   * @param {any[]} arr
+   */
+
+  async replyOneUser(arr: any[]) {
+    await Promise.all(
+      arr.map(async (comment) => {
+        await Promise.all(
+          comment.replies.map(async (reply) => {
+            try {
+              const List = await this.reply.findOne({
+                where: { id: reply.id },
+                relations: ['user'],
+              });
+              if (!List) {
+                throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
+              }
+              const { id, username, avatar } = List.user;
+              reply.user = { id, username, avatar }; // 将回复的用户信息添加到回复对象中
+            } catch (err) {
+              throw new HttpException(
+                err || '查询失败',
+                err.status || HttpStatus.NOT_FOUND,
+              );
+            }
+          }),
+        );
+      }),
+    );
   }
 }
