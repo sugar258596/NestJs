@@ -78,17 +78,17 @@ export class FoodPostService {
         .take(dotPageSize)
         .orderBy('foodPost.updatedAt', 'DESC')
         .leftJoinAndSelect('foodPost.user', 'user');
-      const [list, length] = await queryBuilder.getManyAndCount();
+      const [List, length] = await queryBuilder.getManyAndCount();
 
       // 将查询到的图片地址转换为数组
-      list.forEach((item) => {
+      List.forEach((item) => {
         item.imageList = JSON.parse(item.imageList);
         const { id, avatar, username } = item.user;
         item.user = { id, avatar, username } as User;
       });
 
       return {
-        data: { list, length },
+        data: { List, length },
         message: '查询成功',
       };
     } catch (err) {
