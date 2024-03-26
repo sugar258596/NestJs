@@ -28,20 +28,20 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('adduser')
+  @Post('add')
   @ApiBody({ type: CreateUserDto })
   @ApiOperation({ summary: '添加用户' })
   createAdd(@Body() Body: UpdateUserDto) {
     return this.userService.addUser(Body);
   }
 
-  @Get()
+  @Get('get')
   @ApiOperation({ summary: '用户查找' })
   create(@Query() createUserDto: SearchUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  @Patch(':id')
+  @Patch('patch/:id')
   @ApiOperation({ summary: '数据更新' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 404, description: 'User not found' })
@@ -53,7 +53,7 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   @ApiOperation({ summary: 'id删除' })
   @ApiParam({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
   @ApiResponse({ status: 404, description: 'User not found' })

@@ -31,7 +31,7 @@ import { authUser } from 'src/decorator/auth.decorator';
 export class FoodPostController {
   constructor(private readonly foodPostService: FoodPostService) {}
 
-  @Post()
+  @Post('add')
   @ApiOperation({ summary: '发布美食' })
   @ApiConsumes('multipart/form-data')
   @ApiBody(FormData)
@@ -44,7 +44,7 @@ export class FoodPostController {
     return this.foodPostService.create(file, createFoodPostDto, User);
   }
 
-  @Get()
+  @Get('get')
   @ApiOperation({ summary: '获取发布美食' })
   findAll(@Query() SearchFoodPostDto: SearchFoodPostDto) {
     return this.foodPostService.findAll(SearchFoodPostDto);
@@ -56,7 +56,7 @@ export class FoodPostController {
     return this.foodPostService.findAllByUser(User);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   @ApiOperation({
     summary: '删除美食',
   })

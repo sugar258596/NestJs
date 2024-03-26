@@ -25,21 +25,21 @@ import { User } from '../user/entities/user.entity';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post()
+  @Post('add')
   @ApiOperation({ summary: '添加评论' })
   @ApiBody({ type: CreateCommentDto })
   create(@Body() createCommentDto: CreateCommentDto, @authUser() User: User) {
     return this.commentService.create(createCommentDto, User);
   }
 
-  @Get()
+  @Get('get')
   @ApiOperation({ summary: '根据发布的id查询下面所属的评论' })
   @ApiBody({ type: SearchCommentDto })
   findAll(@Query() SearchCommentDto: SearchCommentDto) {
     return this.commentService.findAll(SearchCommentDto);
   }
 
-  @Delete(':id')
+  @Delete('deleted/:id')
   @ApiOperation({ summary: '删除评论' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.commentService.remove(id);

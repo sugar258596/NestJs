@@ -21,21 +21,21 @@ import { authUser } from 'src/decorator/auth.decorator';
 export class ReplyController {
   constructor(private readonly replyService: ReplyService) {}
 
-  @Post()
+  @Post('add')
   @ApiOperation({ summary: '添加回复' })
   @ApiBody({ type: CreateReplyDto })
   create(@Body() createReplyDto: CreateReplyDto, @authUser() User) {
     return this.replyService.create(createReplyDto, User);
   }
 
-  @Get()
+  @Get('get')
   @ApiOperation({ summary: '回复的回复' })
   @ApiBody({ type: CreateReplyDto })
   findAll(@Query() SearchCommentDto: SearchCommentDto) {
     return this.replyService.findAll(SearchCommentDto);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   @ApiOperation({ summary: '删除回复' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.replyService.remove(id);
