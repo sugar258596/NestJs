@@ -13,7 +13,7 @@ export class CreateReplyDto {
     description: '回复内容',
     required: true,
   })
-  comment: string;
+  content: string;
 
   // 评论回复还是回复回复，0为评论回复，1为回复回复
   @ApiProperty({

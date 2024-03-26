@@ -20,7 +20,7 @@ export class Reply {
 
   // 内容
   @Column()
-  comment: string;
+  content: string;
 
   // 创建时间
   @CreateDateColumn()
