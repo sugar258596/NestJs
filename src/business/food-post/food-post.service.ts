@@ -15,13 +15,10 @@ import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class FoodPostService {
-  private queryBuilder: SelectQueryBuilder<FoodPost>;
   constructor(
     @InjectRepository(FoodPost) private readonly foodPost: Repository<FoodPost>,
     private readonly UploadService: UploadService,
-  ) {
-    this.queryBuilder = this.foodPost.createQueryBuilder();
-  }
+  ) {}
 
   /**
    * @description 美食发布的方法
@@ -70,20 +67,24 @@ export class FoodPostService {
     const { title, page, pageSize } = SearchFoodPostDto;
     const dotPage = page && page != 0 ? page : 0;
     const dotPageSize = pageSize ? dotPage * pageSize : 10;
+    const queryBuilder = this.foodPost.createQueryBuilder('foodPost');
     try {
       title
-        ? this.queryBuilder.where({ title: Like(`%${title}%`) })
-        : this.queryBuilder.where('foodPost.title IS NOT NULL');
+        ? queryBuilder.where({ title: Like(`%${title}%`) })
+        : queryBuilder.where('foodPost.title IS NOT NULL');
 
-      this.queryBuilder
+      queryBuilder
         .skip(dotPage)
         .take(dotPageSize)
-        .orderBy('foodPost.updatedAt', 'DESC');
-      const [list, length] = await this.queryBuilder.getManyAndCount();
+        .orderBy('foodPost.updatedAt', 'DESC')
+        .leftJoinAndSelect('foodPost.user', 'user');
+      const [list, length] = await queryBuilder.getManyAndCount();
 
       // 将查询到的图片地址转换为数组
       list.forEach((item) => {
         item.imageList = JSON.parse(item.imageList);
+        const { id, avatar, username } = item.user;
+        item.user = { id, avatar, username } as User;
       });
 
       return {
@@ -91,8 +92,6 @@ export class FoodPostService {
         message: '查询成功',
       };
     } catch (err) {
-      console.log(err);
-
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
@@ -104,10 +103,9 @@ export class FoodPostService {
    */
   async findAllByUser(user: User) {
     try {
-      this.queryBuilder
-        .where({ user: user.id as any })
-        .orderBy('updatedAt', 'DESC');
-      const [List, length] = await this.queryBuilder.getManyAndCount();
+      const queryBuilder = this.foodPost.createQueryBuilder();
+      queryBuilder.where({ user: user.id as any }).orderBy('updatedAt', 'DESC');
+      const [List, length] = await queryBuilder.getManyAndCount();
       List.forEach((item) => {
         item.imageList = JSON.parse(item.imageList);
       });
@@ -126,9 +124,10 @@ export class FoodPostService {
    * @returns
    */
   async remove(id: number) {
+    const queryBuilder = this.foodPost.createQueryBuilder();
     try {
-      this.queryBuilder.where('id = :id', { id });
-      const { affected } = await this.queryBuilder.delete().execute();
+      queryBuilder.where('id = :id', { id });
+      const { affected } = await queryBuilder.delete().execute();
       if (!affected)
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       return {
@@ -149,9 +148,10 @@ export class FoodPostService {
    * @returns
    */
   async findOne(id: number) {
+    const queryBuilder = this.foodPost.createQueryBuilder();
     try {
-      this.queryBuilder.where('id = :id', { id });
-      const foodPost = await this.queryBuilder.getOne();
+      queryBuilder.where('id = :id', { id });
+      const foodPost = await queryBuilder.getOne();
       if (!foodPost)
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       foodPost.imageList = JSON.parse(foodPost.imageList);
