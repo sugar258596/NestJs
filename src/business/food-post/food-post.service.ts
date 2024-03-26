@@ -51,7 +51,10 @@ export class FoodPostService {
         message: '发布成功',
       };
     } catch (err) {
-      throw new HttpException('发布失败', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        err || '删除失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
