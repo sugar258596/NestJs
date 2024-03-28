@@ -35,7 +35,7 @@ export class FoodPostController {
   @ApiOperation({ summary: '发布美食' })
   @ApiConsumes('multipart/form-data')
   @ApiBody(FormData)
-  @MultipleImagesUploadDecorator('../images/', 'files')
+  @MultipleImagesUploadDecorator('/images/', 'files')
   create(
     @UploadedFiles() file: FileList,
     @Body() createFoodPostDto: CreateFoodPostDto,
@@ -48,6 +48,14 @@ export class FoodPostController {
   @ApiOperation({ summary: '获取发布美食' })
   findAll(@Query() SearchFoodPostDto: SearchFoodPostDto) {
     return this.foodPostService.findAll(SearchFoodPostDto);
+  }
+
+  @Get('one/:id')
+  @ApiOperation({ summary: '获取美食详情' })
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    console.log(id);
+
+    return this.foodPostService.findOne(id);
   }
 
   @Post('/user')

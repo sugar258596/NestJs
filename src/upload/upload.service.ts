@@ -81,14 +81,14 @@ export class UploadService {
           filename: file.filename,
           url: this.generateURL(this.fileImage + filename),
           size: file.size,
-          type: 'image', // 添加文件类型标识
+          status: 'image', // 添加文件类型标识
         });
       } else if (isVideo) {
         data.push({
           filename: file.filename,
           url: this.generateURL(this.fileVideo + filename),
           size: file.size,
-          type: 'video', // 添加文件类型标识
+          status: 'video', // 添加文件类型标识
         });
       }
     });

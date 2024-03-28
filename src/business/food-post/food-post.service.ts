@@ -67,14 +67,13 @@ export class FoodPostService {
    * @returns {Promise<{ data, message }> } 返回查询的美食分享
    */
   async findAll(SearchFoodPostDto: SearchFoodPostDto) {
-    const { id, title, page, pageSize } = SearchFoodPostDto;
+    const { title, page, pageSize } = SearchFoodPostDto;
     const dotPage = page && page != 0 ? page : 0;
     const dotPageSize = pageSize ? dotPage * pageSize : 10;
     const queryBuilder = this.foodPost.createQueryBuilder('foodPost');
-
     try {
-      title || id
-        ? queryBuilder.where([{ title: Like(`%${title}%`) }, { id }])
+      title
+        ? queryBuilder.where({ title: Like(`%${title}%`) })
         : queryBuilder.where('foodPost.title IS NOT NULL');
 
       queryBuilder
@@ -151,14 +150,18 @@ export class FoodPostService {
    * @param {number} id - 美食分享id
    * @returns
    */
-  async findOne(id: number) {
-    const queryBuilder = this.foodPost.createQueryBuilder();
+  async findOne(Fid: number) {
+    const queryBuilder = this.foodPost.createQueryBuilder('foodPost');
     try {
-      queryBuilder.where('id = :id', { id });
+      queryBuilder
+        .where({ id: Fid })
+        .leftJoinAndSelect('foodPost.user', 'user');
       const foodPost = await queryBuilder.getOne();
       if (!foodPost)
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       foodPost.imageList = JSON.parse(foodPost.imageList);
+      const { id, avatar, username } = foodPost.user;
+      foodPost.user = { id, avatar, username } as User;
       return {
         data: foodPost,
         message: '查询成功',
