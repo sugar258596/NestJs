@@ -47,6 +47,13 @@ export const FormData = {
 // 搜索的dto
 export class SearchFoodPostDto {
   @ApiProperty({
+    example: 1,
+    description: 'id',
+    required: false,
+  })
+  id: string;
+
+  @ApiProperty({
     example: '标题',
     description: '标题',
     required: false,

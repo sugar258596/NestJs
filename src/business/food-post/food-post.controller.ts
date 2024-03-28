@@ -35,7 +35,7 @@ export class FoodPostController {
   @ApiOperation({ summary: '发布美食' })
   @ApiConsumes('multipart/form-data')
   @ApiBody(FormData)
-  @MultipleImagesUploadDecorator('/images/', 'files')
+  @MultipleImagesUploadDecorator('../images/', 'files')
   create(
     @UploadedFiles() file: FileList,
     @Body() createFoodPostDto: CreateFoodPostDto,

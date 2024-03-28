@@ -67,13 +67,14 @@ export class FoodPostService {
    * @returns {Promise<{ data, message }> } 返回查询的美食分享
    */
   async findAll(SearchFoodPostDto: SearchFoodPostDto) {
-    const { title, page, pageSize } = SearchFoodPostDto;
+    const { id, title, page, pageSize } = SearchFoodPostDto;
     const dotPage = page && page != 0 ? page : 0;
     const dotPageSize = pageSize ? dotPage * pageSize : 10;
     const queryBuilder = this.foodPost.createQueryBuilder('foodPost');
+
     try {
-      title
-        ? queryBuilder.where({ title: Like(`%${title}%`) })
+      title || id
+        ? queryBuilder.where([{ title: Like(`%${title}%`) }, { id }])
         : queryBuilder.where('foodPost.title IS NOT NULL');
 
       queryBuilder
