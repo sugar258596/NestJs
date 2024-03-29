@@ -25,8 +25,8 @@ export class UploadService {
   }
 
   create(file: Express.Multer.File) {
-    const { filename } = file;
-    const url = this.generateURL(filename);
+    const { filename, path } = file;
+    const url = this.generateURL(path);
     return {
       data: {
         url,
@@ -63,7 +63,7 @@ export class UploadService {
   }
 
   /**
-   *  @description 多文件上传
+   * @description 多文件上传
    * @param files 上传的图片/视频 的文件列表
    * @returns 返回上传的文件信息
    */
@@ -75,18 +75,18 @@ export class UploadService {
     Array.from(files).forEach((file: any) => {
       const isImage = file.mimetype.startsWith('image/');
       const isVideo = file.mimetype.startsWith('video/');
-      const { filename } = file;
+      const { path } = file;
       if (isImage) {
         data.push({
           filename: file.filename,
-          url: this.generateURL(this.fileImage + filename),
+          url: this.generateURL(path),
           size: file.size,
           status: 'image', // 添加文件类型标识
         });
       } else if (isVideo) {
         data.push({
           filename: file.filename,
-          url: this.generateURL(this.fileVideo + filename),
+          url: this.generateURL(path),
           size: file.size,
           status: 'video', // 添加文件类型标识
         });
@@ -99,13 +99,15 @@ export class UploadService {
 
   /**
    * @description 生成地址
-   * @param name 文件名
+   * @param path  文件路径
    * @returns 返回文件地址
    */
-  generateURL(name: string) {
+  generateURL(path: string) {
     const localIP = this.serverInfoService.getLocalIP();
     const agreement = process.env.SERVET_AGREEMENT;
     const prefix = process.env.SERVET_FILE_PREFIX;
-    return `${agreement}://${localIP}${prefix}/${name}`;
+    const regex = /(images(.+))/;
+    const name = path.match(regex)[2].replace(/\\/g, '/');
+    return `${agreement}://${localIP}${prefix}${name}`;
   }
 }

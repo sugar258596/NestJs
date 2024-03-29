@@ -19,6 +19,11 @@ import {
   ImageUploadDecorator,
   MultipleImagesUploadDecorator,
 } from '../decorator/upload.decorator';
+import {
+  CreateUploadDtoDoc,
+  CreateUploadDtoGithub,
+  CreateUploadDtoMultiple,
+} from './dto/create-upload.dto';
 
 @Controller('upload')
 @ApiTags('upload')
@@ -29,18 +34,7 @@ export class UploadController {
   @Post('single')
   @ApiOperation({ summary: '上传到本地服务器' })
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    description: '上传到本地服务器',
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
+  @ApiBody(CreateUploadDtoDoc)
   @ImageUploadDecorator('/images', 'file')
   create(@UploadedFile() file: Express.Multer.File) {
     return this.uploadService.create(file);
@@ -49,25 +43,16 @@ export class UploadController {
   @Post('drawing')
   @ApiOperation({ summary: '上传到github图床' })
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    description: '上传到本地服务器',
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
+  @ApiBody(CreateUploadDtoGithub)
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file) {
     return this.uploadService.uploadToGitHub(file);
   }
 
   @Post('multiple')
+  @ApiOperation({ summary: '多图片上传' })
   @MultipleImagesUploadDecorator('/images/', 'files')
+  @ApiBody(CreateUploadDtoMultiple)
   MultipleImagesUpload(@UploadedFiles() files: FileList) {
     return this.uploadService.multiple(files);
   }
