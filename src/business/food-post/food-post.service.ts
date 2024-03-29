@@ -39,9 +39,8 @@ export class FoodPostService {
       const foodPost = new FoodPost();
       const { data } = this.UploadService.multiple(files);
 
-      Object.keys(createFoodPostDto).forEach((key) => {
-        foodPost[key] = createFoodPostDto[key];
-      });
+      Object.assign(foodPost, createFoodPostDto);
+
       foodPost.user = user;
       foodPost.imageList = JSON.stringify(data);
 

@@ -6,25 +6,26 @@ import {
   MaxLength,
   IsString,
   Matches,
+  IsOptional,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 export class UpdateUserDto extends PartialType(CreateUserDto) {
+  @IsOptional()
   @IsString()
-  @IsNotEmpty({ message: '昵称不能为空' })
   @MinLength(2, { message: '昵称不能少于2个字符' })
   @MaxLength(16, { message: '昵称不能超过16个字符' })
   username: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty({ message: '密码不能为空' })
   @MinLength(6, { message: '密码不能少于6个字符' })
   @MaxLength(22, { message: '密码不能超过22个字符' })
   password: string;
 
+  @IsOptional()
   @Matches(/^(\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*|\d{11})$/, {
     message: '请输入有效的邮箱或手机号码',
   })
-  @IsNotEmpty({ message: '邮箱或手机号码不能为空' })
   Email: string;
 }
 

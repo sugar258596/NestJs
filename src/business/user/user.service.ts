@@ -69,23 +69,49 @@ export class UserService {
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
+
   /**
    * @description 数据更新的方法
    * @param {number} id 用户id
    * @param {UpdateUserDto} updateUserDto 用户信息
    * @param {string} updateUserDto.name 用户信息
    * @param {string} updateUserDto.password 用户信息
+   * @param {string} updateUserDto.Email 用户信息
+   * @param {Express.Multer.File} file 用户头像
    * @returns
    */
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const { username, password } = updateUserDto;
+    const { username, password, Email } = updateUserDto;
     try {
+      // 假如都没有传值
+      if (!username && !password && !Email)
+        throw new HttpException('不能修改空数据', HttpStatus.NOT_FOUND);
+
       const user = await this.createMethod(username);
-      if (user) throw new HttpException('用户已存在', HttpStatus.FORBIDDEN);
-      const { affected } = await this.user.update(
-        { id },
-        { username, password },
-      );
+
+      if (user && user.id !== id)
+        throw new HttpException('用户已存在', HttpStatus.FORBIDDEN);
+
+      // 准备要更新的字段
+      const updateFields = {};
+
+      // 判断是否有用户名
+      if (username) {
+        updateFields['username'] = username;
+      }
+
+      // 判断是否有密码
+      if (password) {
+        updateFields['password'] = await bcrypt.hash(password, 10);
+      }
+
+      // 判断是否有邮箱
+      if (Email) {
+        updateFields['Email'] = Email;
+      }
+
+      const { affected } = await this.user.update({ id }, updateFields);
+
       if (affected == 0)
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       return {
@@ -114,6 +140,8 @@ export class UserService {
       if (!data.url)
         throw new HttpException('上传失败', HttpStatus.BAD_REQUEST);
       const { affected } = await this.user.update({ id }, { avatar: data.url });
+      if (affected == 0)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       return {
         data,
         message: '更改头像成功',

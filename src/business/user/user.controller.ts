@@ -56,7 +56,7 @@ export class UserController {
   }
 
   // 更改头像
-  @Patch('avatar/:id')
+  @Post('avatar/:id')
   @ApiOperation({ summary: '更改头像' })
   @ImageUploadDecorator('/images/avatar', 'avatar')
   updateAvatar(
