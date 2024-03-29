@@ -11,6 +11,9 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 import { LocalStrategy } from './strategy/local.strategy';
 import { LoginThrottlerMiddleware } from './middleware/login-throttler.middleware';
 
+import { UploadService } from 'src/upload/upload.service';
+import { ServerInfoService } from 'src/common/serverInfo.service';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
@@ -22,7 +25,15 @@ import { LoginThrottlerMiddleware } from './middleware/login-throttler.middlewar
     PassportModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, JwtModule, JwtStrategy, LocalStrategy],
+  providers: [
+    AuthService,
+    UserService,
+    JwtModule,
+    JwtStrategy,
+    LocalStrategy,
+    UploadService,
+    ServerInfoService,
+  ],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
