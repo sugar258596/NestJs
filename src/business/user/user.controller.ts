@@ -8,6 +8,7 @@ import {
   Delete,
   ParseIntPipe,
   Query,
+  UploadedFile,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,6 +22,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto, SearchUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ImageUploadDecorator } from 'src/decorator/upload.decorator';
 
 @Controller('user')
 @ApiTags('user')
@@ -51,6 +53,17 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.userService.update(+id, updateUserDto);
+  }
+
+  // 更改头像
+  @Patch('avatar/:id')
+  @ApiOperation({ summary: '更改头像' })
+  @ImageUploadDecorator('/images/avatar', 'avatar')
+  updateAvatar(
+    @Param('id', ParseIntPipe) id: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.userService.updateAvatar(id, file);
   }
 
   @Delete('delete/:id')

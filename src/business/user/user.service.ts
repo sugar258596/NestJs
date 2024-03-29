@@ -5,15 +5,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository, Like } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { UploadService } from 'src/upload/upload.service';
+
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly user: Repository<User>,
+    private readonly UploadService: UploadService,
   ) {}
 
   /**
    * 添加用户
-   * @param {Object} createUserDto 用户信息对象
+   * @param {UpdateUserDto} createUserDto 用户信息对象
    * @param {string} createUserDto.name 用户名
    * @param {string} createUserDto.password 用户密码
    * @param {string} createUserDto.Email 用户密码
@@ -38,10 +41,10 @@ export class UserService {
 
   /**
    * @description 查找用户
-   * @param {Object} SearchUserDto 用户信息对象
-   * @param {Object} SearchUserDto.username 用户名
-   * @param {Object} SearchUserDto.page 页码
-   * @param {Object} SearchUserDto.pageSize 条数
+   * @param {SearchUserDto} SearchUserDto 用户信息对象
+   * @param {string} SearchUserDto.username 用户名
+   * @param {number} SearchUserDto.page 页码
+   * @param {number} SearchUserDto.pageSize 条数
    * @returns {Promise<{ data, message }>} 返回添加后的用户信息
    */
   async create(SearchUserDto: SearchUserDto) {
@@ -68,8 +71,10 @@ export class UserService {
   }
   /**
    * @description 数据更新的方法
-   * @param id 用户id
-   * @param updateUserDto 用户信息
+   * @param {number} id 用户id
+   * @param {UpdateUserDto} updateUserDto 用户信息
+   * @param {string} updateUserDto.name 用户信息
+   * @param {string} updateUserDto.password 用户信息
    * @returns
    */
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -92,6 +97,30 @@ export class UserService {
     } catch (err) {
       throw new HttpException(
         err.response || '数据修改失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  /**
+   * @description - 更改头像的方法
+   * @param {number} id - 用户id
+   * @param {File} file - 文件
+   */
+
+  async updateAvatar(id: number, file: Express.Multer.File) {
+    try {
+      const { data } = this.UploadService.create(file);
+      if (!data.url)
+        throw new HttpException('上传失败', HttpStatus.BAD_REQUEST);
+      const { affected } = await this.user.update({ id }, { avatar: data.url });
+      return {
+        data,
+        message: '更改头像成功',
+      };
+    } catch (err) {
+      throw new HttpException(
+        err.response || '更改头像失败',
         err.status || HttpStatus.BAD_REQUEST,
       );
     }
@@ -123,7 +152,7 @@ export class UserService {
 
   /**
    * @description 数据库查询完整信息
-   * @param username 用户名
+   * @param {string} username 用户名
    * @returns  {Promise<User>} 返回查询后的用户信息
    */
 
