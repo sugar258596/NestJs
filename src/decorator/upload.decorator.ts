@@ -1,8 +1,4 @@
-import {
-  FileInterceptor,
-  FilesInterceptor,
-  MulterModule,
-} from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { UseInterceptors } from '@nestjs/common';
 
 import { diskStorage } from 'multer';
@@ -18,7 +14,13 @@ import * as fs from 'fs';
 
 export const ImageUploadDecorator = (path: string, key: string = 'file') => {
   const storage = diskStorage({
-    destination: join(__dirname, path), // 上传路径地址
+    destination: (req, file: Express.Multer.File, callback) => {
+      const folderPath = join(__dirname, path);
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath, { recursive: true });
+      }
+      return callback(null, folderPath);
+    },
     filename: (_, file, callback) => {
       const fileName = `${new Date().getTime()}${extname(file.originalname)}`;
       return callback(null, fileName);
