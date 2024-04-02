@@ -205,7 +205,6 @@ export class FoodPostService {
         const { id, avatar, username } = item.user;
         item.user = { id, avatar, username } as User;
       });
-      console.log(List);
 
       return {
         data: { List, length },

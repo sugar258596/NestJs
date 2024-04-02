@@ -65,8 +65,6 @@ export class ReplyService {
 
     if (!id) throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
     try {
-      console.log(id);
-
       const List = await this.reply.find({
         where: { id },
         skip: page,
