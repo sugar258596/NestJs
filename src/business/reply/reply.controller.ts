@@ -13,7 +13,7 @@ import { ReplyService } from './reply.service';
 
 import { CreateReplyDto, SearchCommentDto } from './dto/create-reply.dto';
 import { UpdateReplyDto } from './dto/update-reply.dto';
-import { authUser } from 'src/decorator/auth.decorator';
+import { authUser, getPagination } from 'src/decorator/auth.decorator';
 
 @Controller('reply')
 @ApiTags('回复')
@@ -31,7 +31,7 @@ export class ReplyController {
   @Get('get')
   @ApiOperation({ summary: '回复的回复' })
   @ApiBody({ type: CreateReplyDto })
-  findAll(@Query() SearchCommentDto: SearchCommentDto) {
+  findAll(@getPagination() SearchCommentDto: SearchCommentDto) {
     return this.replyService.findAll(SearchCommentDto);
   }
 

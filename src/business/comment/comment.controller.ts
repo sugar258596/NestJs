@@ -15,7 +15,7 @@ import { CommentService } from './comment.service';
 import { CreateCommentDto, SearchCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
-import { authUser } from 'src/decorator/auth.decorator';
+import { authUser, getPagination } from 'src/decorator/auth.decorator';
 
 import { User } from '../user/entities/user.entity';
 
@@ -35,7 +35,7 @@ export class CommentController {
   @Get('get')
   @ApiOperation({ summary: '根据发布的id查询下面所属的评论' })
   @ApiBody({ type: SearchCommentDto })
-  findAll(@Query() SearchCommentDto: SearchCommentDto) {
+  findAll(@getPagination() SearchCommentDto: SearchCommentDto) {
     return this.commentService.findAll(SearchCommentDto);
   }
 

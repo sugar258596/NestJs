@@ -62,16 +62,15 @@ export class ReplyService {
 
   async findAll(SearchCommentDto: SearchCommentDto) {
     const { id, page, pageSize } = SearchCommentDto;
-    const dotPage = page && page != 0 ? page : 0;
-    const dotPageSize = pageSize ? dotPage * pageSize : 10;
+
     if (!id) throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
     try {
       console.log(id);
 
       const List = await this.reply.find({
         where: { id },
-        skip: dotPage,
-        take: dotPageSize,
+        skip: page,
+        take: pageSize,
         relations: ['user', 'replies'],
         order: { updatedAt: 'DESC' },
       });

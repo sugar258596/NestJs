@@ -23,6 +23,7 @@ import { UserService } from './user.service';
 import { CreateUserDto, SearchUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ImageUploadDecorator } from 'src/decorator/upload.decorator';
+import { getPagination } from 'src/decorator/auth.decorator';
 
 @Controller('user')
 @ApiTags('user')
@@ -39,7 +40,7 @@ export class UserController {
 
   @Get('get')
   @ApiOperation({ summary: '用户查找' })
-  create(@Query() createUserDto: SearchUserDto) {
+  create(@getPagination() createUserDto: SearchUserDto) {
     return this.userService.create(createUserDto);
   }
 

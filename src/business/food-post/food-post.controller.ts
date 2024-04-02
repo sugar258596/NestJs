@@ -23,7 +23,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { MultipleImagesUploadDecorator } from 'src/decorator/upload.decorator';
-import { authUser } from 'src/decorator/auth.decorator';
+import { authUser, getPagination } from 'src/decorator/auth.decorator';
 
 @Controller('food-post')
 @ApiTags('foodPost')
@@ -46,8 +46,14 @@ export class FoodPostController {
 
   @Get('get')
   @ApiOperation({ summary: '获取发布美食' })
-  findAll(@Query() SearchFoodPostDto: SearchFoodPostDto) {
+  findAll(@getPagination() SearchFoodPostDto: SearchFoodPostDto) {
     return this.foodPostService.findAll(SearchFoodPostDto);
+  }
+
+  @Get('role/get')
+  @ApiOperation({ summary: '管理员获取发布美食' })
+  RoleAll(@getPagination() SearchFoodPostDto: SearchFoodPostDto) {
+    return this.foodPostService.RoleAll(SearchFoodPostDto);
   }
 
   @Get('one/:id')

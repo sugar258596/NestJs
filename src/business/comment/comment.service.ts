@@ -57,16 +57,14 @@ export class CommentService {
   async findAll(SearchCommentDto: SearchCommentDto) {
     const { id, page, pageSize } = SearchCommentDto;
 
-    const dotPage = page && page != 0 ? page : 0;
-    const dotPageSize = pageSize ? dotPage * pageSize : 10;
     try {
       const List = await this.comment.find({
         where: {
           foodPost: { id },
         },
         relations: ['user', 'replies'],
-        skip: dotPage,
-        take: dotPageSize,
+        skip: page,
+        take: pageSize,
         order: { updatedAt: 'DESC' },
       });
       // 过滤掉user表中的敏感信息

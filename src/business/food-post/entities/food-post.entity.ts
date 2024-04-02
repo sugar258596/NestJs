@@ -14,6 +14,7 @@ import { Reply } from 'src/business/reply/entities/reply.entity';
 import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.entity';
 import { UserLike } from 'src/business/user-like/entities/user-like.entity';
 import { Comment } from 'src/business/comment/entities/comment.entity';
+import { Static } from 'src/business/enum/SQL';
 
 // 美食分享表
 @Entity()
@@ -40,12 +41,27 @@ export class FoodPost {
   })
   imageList: string;
 
+  // 美食分享类型
+  @Column({
+    comment: '美食分享类型',
+  })
+  type: string;
+
   // 评分
   @Column({
     comment: '评分',
     default: 0,
   })
   rating: number;
+
+  // 状态
+  @Column({
+    type: 'enum',
+    comment: '状态',
+    enum: Static,
+    default: Static.err,
+  })
+  status: number;
 
   // 创建时间
   @CreateDateColumn()

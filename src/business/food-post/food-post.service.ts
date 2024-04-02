@@ -67,17 +67,15 @@ export class FoodPostService {
    */
   async findAll(SearchFoodPostDto: SearchFoodPostDto) {
     const { title, page, pageSize } = SearchFoodPostDto;
-    const dotPage = page && page != 0 ? page : 0;
-    const dotPageSize = pageSize ? dotPage * pageSize : 10;
     const queryBuilder = this.foodPost.createQueryBuilder('foodPost');
     try {
       title
-        ? queryBuilder.where({ title: Like(`%${title}%`) })
-        : queryBuilder.where('foodPost.title IS NOT NULL');
+        ? queryBuilder.where({ title: Like(`%${title}%`) }).where({ status: 1 })
+        : queryBuilder.where('foodPost.title IS NOT NULL').where({ status: 1 });
 
       queryBuilder
-        .skip(dotPage)
-        .take(dotPageSize)
+        .skip(page)
+        .take(pageSize)
         .orderBy('foodPost.updatedAt', 'DESC')
         .leftJoinAndSelect('foodPost.user', 'user');
       const [List, length] = await queryBuilder.getManyAndCount();
@@ -94,6 +92,8 @@ export class FoodPostService {
         message: '查询成功',
       };
     } catch (err) {
+      console.log(err);
+
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
@@ -106,7 +106,10 @@ export class FoodPostService {
   async findAllByUser(user: User) {
     try {
       const queryBuilder = this.foodPost.createQueryBuilder();
-      queryBuilder.where({ user: user.id as any }).orderBy('updatedAt', 'DESC');
+      queryBuilder
+        .where({ user: user.id as any })
+        .where({ status: 1 })
+        .orderBy('updatedAt', 'DESC');
       const [List, length] = await queryBuilder.getManyAndCount();
       List.forEach((item) => {
         item.imageList = JSON.parse(item.imageList);
@@ -170,6 +173,46 @@ export class FoodPostService {
         err || '查询失败',
         err.status || HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  /**
+   * @description 管理员查询全部美食
+   * @param {object} SearchFoodPostDto  - 查询美食分享的参数
+   * @param {string} SearchFoodPostDto.title - 标题
+   * @param {number} SearchFoodPostDto.page - 页码
+   * @param {number} SearchFoodPostDto.pageSize - 条数
+   * @returns {Promise<{ data, message }> } 返回查询的美食分享
+   */
+  async RoleAll(SearchFoodPostDto: SearchFoodPostDto) {
+    const { title, page, pageSize } = SearchFoodPostDto;
+    const queryBuilder = this.foodPost.createQueryBuilder('foodPost');
+    try {
+      title
+        ? queryBuilder.where({ title: Like(`%${title}%`) })
+        : queryBuilder.where('foodPost.title IS NOT NULL');
+
+      queryBuilder
+        .skip(page)
+        .take(pageSize)
+        .orderBy('foodPost.updatedAt', 'DESC')
+        .leftJoinAndSelect('foodPost.user', 'user');
+      const [List, length] = await queryBuilder.getManyAndCount();
+
+      // 将查询到的图片地址转换为数组
+      List.forEach((item) => {
+        item.imageList = JSON.parse(item.imageList);
+        const { id, avatar, username } = item.user;
+        item.user = { id, avatar, username } as User;
+      });
+      console.log(List);
+
+      return {
+        data: { List, length },
+        message: '查询成功',
+      };
+    } catch (err) {
+      throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
 }

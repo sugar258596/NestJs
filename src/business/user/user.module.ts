@@ -3,7 +3,6 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Veriofy } from 'src/veriofy';
 
 import { UploadService } from 'src/upload/upload.service';
 import { ServerInfoService } from 'src/common/serverInfo.service';

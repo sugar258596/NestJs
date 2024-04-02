@@ -57,9 +57,7 @@ export class UserService {
           })
         : queryBuilder.where('user.username IS NOT NULL');
 
-      queryBuilder
-        .skip(page || page == 0 ? (page - 1) * pageSize : 0)
-        .take(pageSize ? page * pageSize : 10);
+      queryBuilder.skip(page).take(pageSize);
       const [List, length] = await queryBuilder.getManyAndCount();
       return {
         data: { List, length },
