@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { Static } from '../../enum/SQL';
+import { Static, RoleEnum } from '../../enum/SQL';
 
 import { ContentReview } from 'src/business/content-review/entities/content-review.entity';
 import { Reply } from 'src/business/reply/entities/reply.entity';
@@ -80,6 +80,14 @@ export class User {
     comment: '数据更新',
   })
   upDate?: string;
+
+  @Column({
+    type: 'enum',
+    enum: RoleEnum,
+    default: [RoleEnum.TEST],
+    comment: '权限',
+  })
+  roles?: RoleEnum[];
 
   @Column({
     type: 'enum',

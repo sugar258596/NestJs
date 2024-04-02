@@ -3,6 +3,10 @@ export enum Static {
   err = 2,
 }
 
-export enum Add {
-  PostalCode = 0,
+export enum RoleEnum {
+  // 超级管理员
+  SUPER = 'super',
+
+  // 用户
+  TEST = 'test',
 }

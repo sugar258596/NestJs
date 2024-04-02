@@ -125,6 +125,9 @@ export class AuthService {
    */
   userInfo(user: User) {
     const { exp, iat, ...data } = user as any;
+    const { roles } = data;
+    // 将权限转换为数组
+    data.roles = roles.split(',');
     return {
       data,
       message: '成功获取',
