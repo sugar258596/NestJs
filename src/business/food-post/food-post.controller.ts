@@ -8,6 +8,7 @@ import {
   UploadedFiles,
   Query,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { FoodPostService } from './food-post.service';
 import {
@@ -20,6 +21,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { MultipleImagesUploadDecorator } from 'src/decorator/upload.decorator';
@@ -74,5 +76,17 @@ export class FoodPostController {
   })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.foodPostService.remove(id);
+  }
+
+  @Put('update/:id')
+  @ApiOperation({
+    summary: '管理员更新美食状态',
+  })
+  @ApiBody({ type: Number })
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() type: { status: number },
+  ) {
+    return this.foodPostService.update(id, type);
   }
 }

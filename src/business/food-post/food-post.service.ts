@@ -191,6 +191,7 @@ export class FoodPostService {
       title
         ? queryBuilder.where({ title: Like(`%${title}%`) })
         : queryBuilder.where('foodPost.title IS NOT NULL');
+      console.log(title);
 
       queryBuilder
         .skip(page)
@@ -212,6 +213,32 @@ export class FoodPostService {
       };
     } catch (err) {
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * @description 管理员更新美食状态·
+   * @param {number} id - 美食id
+   * @param {object} type - 更新状态
+   * @param {number} type.status - 状态
+   * @returns
+   */
+
+  async update(id: number, type: { status: number }) {
+    const { status } = type;
+    try {
+      const { affected } = await this.foodPost.update({ id }, { status });
+      if (!affected)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
+      return {
+        data: { length: affected },
+        message: '更新成功',
+      };
+    } catch (err) {
+      throw new HttpException(
+        err || '更新失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

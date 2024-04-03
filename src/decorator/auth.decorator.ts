@@ -33,7 +33,9 @@ export const authUser = createParamDecorator(
 export const getPagination = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const req = ctx.switchToHttp().getRequest<Request>();
+
     const { page = 0, pageSize = 10, ...rest } = req.query;
+    console.log('rest', rest);
 
     const dotPage =
       Number(page) !== 0 ? (Number(page) - 1) * Number(pageSize) : 0;
@@ -42,7 +44,7 @@ export const getPagination = createParamDecorator(
     return {
       page: dotPage,
       pageSize: dotPageSize,
-      rest,
+      ...rest,
     };
   },
 );
