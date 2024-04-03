@@ -35,7 +35,6 @@ export const getPagination = createParamDecorator(
     const req = ctx.switchToHttp().getRequest<Request>();
 
     const { page = 0, pageSize = 10, ...rest } = req.query;
-    console.log('rest', rest);
 
     const dotPage =
       Number(page) !== 0 ? (Number(page) - 1) * Number(pageSize) : 0;

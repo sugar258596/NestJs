@@ -92,8 +92,6 @@ export class FoodPostService {
         message: '查询成功',
       };
     } catch (err) {
-      console.log(err);
-
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
@@ -191,7 +189,6 @@ export class FoodPostService {
       title
         ? queryBuilder.where({ title: Like(`%${title}%`) })
         : queryBuilder.where('foodPost.title IS NOT NULL');
-      console.log(title);
 
       queryBuilder
         .skip(page)

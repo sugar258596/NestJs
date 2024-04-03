@@ -39,8 +39,6 @@ export class CommentService {
         message: '评论成功',
       };
     } catch (err) {
-      console.log(err);
-
       throw new HttpException('评论失败', HttpStatus.NOT_FOUND);
     }
   }
