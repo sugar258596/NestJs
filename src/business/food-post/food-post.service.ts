@@ -65,7 +65,7 @@ export class FoodPostService {
    * @param {number} SearchFoodPostDto.pageSize - 条数
    * @returns {Promise<{ data, message }> } 返回查询的美食分享
    */
-  async findAll(SearchFoodPostDto: SearchFoodPostDto) {
+  async findAll(user: User, SearchFoodPostDto: SearchFoodPostDto) {
     const { title, page, pageSize } = SearchFoodPostDto;
     const queryBuilder = this.foodPost.createQueryBuilder('foodPost');
     try {
@@ -81,11 +81,13 @@ export class FoodPostService {
       const [List, length] = await queryBuilder.getManyAndCount();
 
       // 将查询到的图片地址转换为数组
-      List.forEach((item) => {
-        item.imageList = JSON.parse(item.imageList);
-        const { id, avatar, username } = item.user;
-        item.user = { id, avatar, username } as User;
-      });
+      await Promise.all(
+        List.map(async (item) => {
+          item.imageList = JSON.parse(item.imageList);
+          const { id, avatar, username } = item.user;
+          item.user = { id, avatar, username } as User;
+        }),
+      );
 
       return {
         data: { List, length },

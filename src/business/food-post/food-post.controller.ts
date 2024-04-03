@@ -48,8 +48,11 @@ export class FoodPostController {
 
   @Get('get')
   @ApiOperation({ summary: '获取发布美食' })
-  findAll(@getPagination() SearchFoodPostDto: SearchFoodPostDto) {
-    return this.foodPostService.findAll(SearchFoodPostDto);
+  findAll(
+    @authUser() User,
+    @getPagination() SearchFoodPostDto: SearchFoodPostDto,
+  ) {
+    return this.foodPostService.findAll(User, SearchFoodPostDto);
   }
 
   @Get('role/get')

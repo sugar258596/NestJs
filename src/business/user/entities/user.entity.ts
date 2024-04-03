@@ -106,9 +106,13 @@ export class User {
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
 
-  // 一对多关系：一个用户可以点赞多个美食分享
-  @OneToMany(() => Follow, (like) => like.user)
-  likes: Follow[];
+  // 一对多关系：一个用户可以关注多个用户
+  @OneToMany(() => Follow, (like) => like.following)
+  following: Follow[];
+
+  // 一对多关系：一个用户可以被多个用户关注
+  @OneToMany(() => Follow, (like) => like.follower)
+  followers: Follow[];
 
   // 一对多关系：一个用户可以收藏多个美食分享
   @OneToMany(() => UserFavorite, (favorite) => favorite.user)

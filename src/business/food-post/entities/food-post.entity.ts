@@ -102,10 +102,6 @@ export class FoodPost {
   @OneToMany(() => Comment, (comment) => comment.foodPost)
   comments: Comment[];
 
-  // 一对多关系：一个美食分享可以被多个用户点赞
-  @OneToMany(() => Follow, (like) => like.foodPost)
-  likes: Follow[];
-
   // 一对多关系：一个美食分享可以被多个用户收藏
   @OneToMany(() => UserFavorite, (favorite) => favorite.foodPost)
   favorites: UserFavorite[];

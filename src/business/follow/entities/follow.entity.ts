@@ -19,11 +19,11 @@ export class Follow {
   @CreateDateColumn()
   createdAt: Date;
 
-  // 多对一关系：多个点赞属于同一个用户
-  @ManyToOne(() => User, (user) => user.likes)
-  user: User;
+  // 关注者
+  @ManyToOne(() => User, (user) => user.following)
+  follower: User;
 
-  // 多对一关系：多个点赞属于同一个美食分享
-  @ManyToOne(() => FoodPost, (foodPost) => foodPost.likes)
-  foodPost: FoodPost;
+  // 被关注者
+  @ManyToOne(() => User, (user) => user.followers)
+  following: User;
 }

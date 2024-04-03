@@ -6,37 +6,27 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { FollowService } from './follow.service';
+import { authUser } from 'src/decorator/auth.decorator';
+
 import { CreateFollowDto } from './dto/create-follow.dto';
 import { UpdateFollowDto } from './dto/update-follow.dto';
 
+import { User } from '../user/entities/user.entity';
+
 @Controller('follow')
+@ApiTags('关注')
+@ApiBearerAuth('access-token')
 export class FollowController {
   constructor(private readonly followService: FollowService) {}
 
   @Post()
-  create(@Body() CreateFollowDto: CreateFollowDto) {
-    return this.followService.create(CreateFollowDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.followService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.followService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() UpdateFollowDto: UpdateFollowDto) {
-    return this.followService.update(+id, UpdateFollowDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.followService.remove(+id);
+  @ApiOperation({ summary: '关注用户' })
+  create(@authUser() user: User, @Query() CreateFollowDto: CreateFollowDto) {
+    return this.followService.create(user, CreateFollowDto);
   }
 }
