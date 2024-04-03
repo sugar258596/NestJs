@@ -13,7 +13,7 @@ import { User } from 'src/business/user/entities/user.entity';
 import { ContentReview } from 'src/business/content-review/entities/content-review.entity';
 import { Reply } from 'src/business/reply/entities/reply.entity';
 import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.entity';
-import { UserLike } from 'src/business/user-like/entities/user-like.entity';
+import { Follow } from 'src/business/follow/entities/follow.entity';
 import { Comment } from 'src/business/comment/entities/comment.entity';
 import { Static } from 'src/business/enum/SQL';
 import { Rating } from 'src/business/rating/entities/rating.entity';
@@ -103,8 +103,8 @@ export class FoodPost {
   comments: Comment[];
 
   // 一对多关系：一个美食分享可以被多个用户点赞
-  @OneToMany(() => UserLike, (like) => like.foodPost)
-  likes: UserLike[];
+  @OneToMany(() => Follow, (like) => like.foodPost)
+  likes: Follow[];
 
   // 一对多关系：一个美食分享可以被多个用户收藏
   @OneToMany(() => UserFavorite, (favorite) => favorite.foodPost)

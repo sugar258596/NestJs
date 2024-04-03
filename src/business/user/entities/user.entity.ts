@@ -13,7 +13,7 @@ import { ContentReview } from 'src/business/content-review/entities/content-revi
 import { Reply } from 'src/business/reply/entities/reply.entity';
 import { Comment } from 'src/business/comment/entities/comment.entity';
 import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.entity';
-import { UserLike } from 'src/business/user-like/entities/user-like.entity';
+import { Follow } from 'src/business/follow/entities/follow.entity';
 import { FoodPost } from 'src/business/food-post/entities/food-post.entity';
 import { Rating } from 'src/business/rating/entities/rating.entity';
 // 定义实体类
@@ -107,8 +107,8 @@ export class User {
   comments: Comment[];
 
   // 一对多关系：一个用户可以点赞多个美食分享
-  @OneToMany(() => UserLike, (like) => like.user)
-  likes: UserLike[];
+  @OneToMany(() => Follow, (like) => like.user)
+  likes: Follow[];
 
   // 一对多关系：一个用户可以收藏多个美食分享
   @OneToMany(() => UserFavorite, (favorite) => favorite.user)

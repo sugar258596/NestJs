@@ -10,7 +10,7 @@ import { FoodPost } from 'src/business/food-post/entities/food-post.entity';
 
 // 用户点赞表
 @Entity()
-export class UserLike {
+export class Follow {
   // 主键，自动生成
   @PrimaryGeneratedColumn()
   id: number;
