@@ -15,7 +15,7 @@ import { Reply } from 'src/business/reply/entities/reply.entity';
 import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.entity';
 import { Follow } from 'src/business/follow/entities/follow.entity';
 import { Comment } from 'src/business/comment/entities/comment.entity';
-import { Static } from 'src/business/enum/SQL';
+import { Static } from 'src/enum/SQL';
 import { Rating } from 'src/business/rating/entities/rating.entity';
 
 // 美食分享表
