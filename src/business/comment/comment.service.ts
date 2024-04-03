@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 
 import { Comment } from './entities/comment.entity';
 import { FoodPostService } from '../food-post/food-post.service';
-import { ReplyService } from '../reply/reply.service';
+
 import { Reply } from '../reply/entities/reply.entity';
 import { User } from '../user/entities/user.entity';
 
@@ -16,7 +16,7 @@ export class CommentService {
   constructor(
     @InjectRepository(Comment) private readonly comment: Repository<Comment>,
     @InjectRepository(Reply) private readonly reply: Repository<Reply>,
-    private readonly FoodPostService: FoodPostService, // private readonly ReplyService: ReplyService,
+    private readonly FoodPostService: FoodPostService,
   ) {}
 
   /**

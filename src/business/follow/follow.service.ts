@@ -52,17 +52,22 @@ export class FollowService {
     }
   }
 
-  // 获取用户关注列表
-  async findAll(user: User) {
+  /**
+   * @description 判断是否关注
+   * @param {number} id  - 用户id
+   * @param {number}  follower - 关注者id
+   * @returns
+   */
+  async isFollow(id: number, follower: number): Promise<boolean> {
     try {
-      const { id } = user;
-      const list = await this.follow.find({
+      const follow = await this.follow.findOne({
         where: {
           follower: { id },
+          following: { id: follower },
         },
-        relations: ['following'],
       });
-      return { data: list };
+
+      return !!follow;
     } catch (err) {
       throw new HttpException(
         err.response || '获取失败',

@@ -5,15 +5,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { FoodPost } from './entities/food-post.entity';
 import { User } from '../user/entities/user.entity';
+import { Follow } from '../follow/entities/follow.entity';
 
 import { UploadService } from 'src/upload/upload.service';
 import { ServerInfoService } from 'src/common/serverInfo.service';
+import { FollowService } from '../follow/follow.service';
 import { UserService } from '../user/user.service';
-import { Follow } from '../follow/entities/follow.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FoodPost, User])],
+  imports: [TypeOrmModule.forFeature([FoodPost, User, Follow])],
   controllers: [FoodPostController],
-  providers: [FoodPostService, UploadService, ServerInfoService, UserService],
+  providers: [
+    FoodPostService,
+    UploadService,
+    ServerInfoService,
+    UserService,
+    FollowService,
+  ],
 })
 export class FoodPostModule {}

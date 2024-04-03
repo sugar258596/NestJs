@@ -12,12 +12,14 @@ import { FoodPost } from './entities/food-post.entity';
 import { User } from '../user/entities/user.entity';
 
 import { UploadService } from 'src/upload/upload.service';
+import { FollowService } from '../follow/follow.service';
 
 @Injectable()
 export class FoodPostService {
   constructor(
     @InjectRepository(FoodPost) private readonly foodPost: Repository<FoodPost>,
     private readonly UploadService: UploadService,
+    private readonly followService: FollowService,
   ) {}
 
   /**
@@ -85,7 +87,8 @@ export class FoodPostService {
         List.map(async (item) => {
           item.imageList = JSON.parse(item.imageList);
           const { id, avatar, username } = item.user;
-          item.user = { id, avatar, username } as User;
+          const isFollow = await this.followService.isFollow(user.id, id);
+          item.user = { id, avatar, username, isFollow } as unknown as User;
         }),
       );
 
@@ -94,6 +97,8 @@ export class FoodPostService {
         message: '查询成功',
       };
     } catch (err) {
+      console.log(err);
+
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }

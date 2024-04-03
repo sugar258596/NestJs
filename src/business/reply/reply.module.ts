@@ -15,10 +15,19 @@ import { FoodPostService } from '../food-post/food-post.service';
 import { UserService } from '../user/user.service';
 import { ServerInfoService } from 'src/common/serverInfo.service';
 import { UploadService } from 'src/upload/upload.service';
+import { Follow } from '../follow/entities/follow.entity';
+import { FollowService } from '../follow/follow.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Reply, User, Comment, ContentReview, FoodPost]),
+    TypeOrmModule.forFeature([
+      Reply,
+      User,
+      Comment,
+      ContentReview,
+      FoodPost,
+      Follow,
+    ]),
   ],
   controllers: [ReplyController],
   providers: [
@@ -28,6 +37,7 @@ import { UploadService } from 'src/upload/upload.service';
     UserService,
     ServerInfoService,
     FoodPostService,
+    FollowService,
   ],
 })
 export class ReplyModule {}
