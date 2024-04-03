@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToOne,
+  AfterLoad,
 } from 'typeorm';
 
 import { User } from 'src/business/user/entities/user.entity';
@@ -68,6 +69,13 @@ export class FoodPost {
     default: 0,
   })
   ratingAverage: number;
+
+  @AfterLoad()
+  calculateAverageRating() {
+    // 计算评分平均值
+    this.ratingAverage =
+      this.ratingCount > 0 ? this.totalRating / this.ratingCount : 0;
+  }
 
   // 状态
   @Column({

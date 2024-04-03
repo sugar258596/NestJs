@@ -5,12 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { FoodPost } from './entities/food-post.entity';
 import { User } from '../user/entities/user.entity';
+import { Rating } from '../rating/entities/rating.entity';
 
 import { UploadService } from 'src/upload/upload.service';
 import { ServerInfoService } from 'src/common/serverInfo.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FoodPost, User])],
+  imports: [TypeOrmModule.forFeature([FoodPost, User, Rating])],
   controllers: [FoodPostController],
   providers: [FoodPostService, UploadService, ServerInfoService],
 })

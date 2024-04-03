@@ -238,4 +238,31 @@ export class FoodPostService {
       );
     }
   }
+
+  /**
+   * @description 更新美食分享
+   * @param {number} id - 美食分享id
+   * @param {UpdateFoodPostDto} updateFoodPostDto - 更新美食分享的参数
+   * @returns
+   */
+  async updateFoodPost(id: number, updateFoodPostDto: UpdateFoodPostDto) {
+    updateFoodPostDto.imageList = JSON.stringify(updateFoodPostDto.imageList);
+    try {
+      const { affected } = await this.foodPost.update(
+        { id },
+        updateFoodPostDto,
+      );
+      if (!affected)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
+      return {
+        data: { length: affected },
+        message: '更新成功',
+      };
+    } catch (err) {
+      throw new HttpException(
+        err || '更新失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
