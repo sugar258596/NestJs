@@ -15,6 +15,7 @@ import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.
 import { UserLike } from 'src/business/user-like/entities/user-like.entity';
 import { Comment } from 'src/business/comment/entities/comment.entity';
 import { Static } from 'src/business/enum/SQL';
+import { Rating } from 'src/business/rating/entities/rating.entity';
 
 // 美食分享表
 @Entity()
@@ -47,12 +48,26 @@ export class FoodPost {
   })
   type: string;
 
-  // 评分
+  // 总评分
   @Column({
-    comment: '评分',
+    comment: '总评分',
     default: 0,
   })
-  rating: number;
+  totalRating: number;
+
+  // 评分次数
+  @Column({
+    comment: '评分次数',
+    default: 0,
+  })
+  ratingCount: number;
+
+  // 评分平均值
+  @Column({
+    comment: '评分平均值',
+    default: 0,
+  })
+  ratingAverage: number;
 
   // 状态
   @Column({
@@ -90,6 +105,10 @@ export class FoodPost {
   // 一对多关系：一个美食分享可以有多个回复
   @OneToMany(() => Reply, (reply) => reply.comments)
   replies: Reply[];
+
+  //一对多关系：一个美食分享可以有多个评分
+  @OneToMany(() => Rating, (rating) => rating.foodPost)
+  ratings: Rating[];
 
   // 一对多关系：一个美食分享可以有多个审核记录
   @OneToMany(() => ContentReview, (review) => review.foodPost)

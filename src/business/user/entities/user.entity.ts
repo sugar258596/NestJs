@@ -15,6 +15,7 @@ import { Comment } from 'src/business/comment/entities/comment.entity';
 import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.entity';
 import { UserLike } from 'src/business/user-like/entities/user-like.entity';
 import { FoodPost } from 'src/business/food-post/entities/food-post.entity';
+import { Rating } from 'src/business/rating/entities/rating.entity';
 // 定义实体类
 /**
    *  通过 @Entity 来标记一个实体类
@@ -120,4 +121,8 @@ export class User {
   // 一对多关系：一个管理员可以审核多个内容
   @OneToMany(() => ContentReview, (review) => review.admin)
   reviews: ContentReview[];
+
+  // 一对多关系：一个用户可以有多个评分
+  @OneToMany(() => Rating, (rating) => rating.user)
+  ratings: Reply[];
 }

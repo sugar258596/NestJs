@@ -9,6 +9,7 @@ import { UserLikeModule } from './business/user-like/user-like.module';
 import { CommentModule } from './business/comment/comment.module';
 import { ContentReviewModule } from './business/content-review/content-review.module';
 import { ReplyModule } from './business/reply/reply.module';
+import { RatingModule } from './business/rating/rating.module';
 
 import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE, APP_GUARD } from '@nestjs/core';
 import { Response } from './common/response.interceptor';
@@ -34,6 +35,7 @@ import * as fs from 'fs';
     CommentModule,
     ContentReviewModule,
     ReplyModule,
+    RatingModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) =>
