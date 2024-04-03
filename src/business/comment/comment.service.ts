@@ -29,7 +29,10 @@ export class CommentService {
    */
   async create(createCommentDto: CreateCommentDto, user: User) {
     try {
-      const { data } = await this.FoodPostService.findOne(createCommentDto.id);
+      const { data } = await this.FoodPostService.findOne(
+        user,
+        createCommentDto.id,
+      );
       const comment = new Comment();
       comment.foodPost = data;
       comment.content = createCommentDto.content;

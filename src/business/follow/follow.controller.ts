@@ -26,7 +26,7 @@ export class FollowController {
 
   @Post()
   @ApiOperation({ summary: '关注用户' })
-  create(@authUser() user: User, @Query() CreateFollowDto: CreateFollowDto) {
+  create(@authUser() user: User, @Body() CreateFollowDto: CreateFollowDto) {
     return this.followService.create(user, CreateFollowDto);
   }
 }

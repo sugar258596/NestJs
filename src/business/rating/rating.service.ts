@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -24,7 +19,7 @@ export class RatingService {
   async create(user: User, createRatingDto: CreateRatingDto) {
     try {
       const { id, value } = createRatingDto;
-      const { data } = await this.foodPostService.findOne(id);
+      const { data } = await this.foodPostService.findOne(user, id);
       if (data.user.id === user.id) {
         throw new HttpException('不能给自己评分', HttpStatus.BAD_REQUEST);
       }
@@ -36,13 +31,17 @@ export class RatingService {
       data.ratingCount += 1;
       data.totalRating += Number(value);
       await this.foodPostService.updateFoodPost(id, data);
+
       return {
-        message: '评分成功',
+        message: '评分成功,等待审核',
       };
     } catch (err) {
       if (err.code === 'ER_DUP_ENTRY') {
         // 捕获唯一性约束错误
-        throw new ConflictException('您已经对该美食分享进行过评分');
+        throw new HttpException(
+          '您已经对该美食分享进行过评分',
+          HttpStatus.BAD_REQUEST,
+        );
       } else {
         throw new HttpException(
           err || '评分失败',

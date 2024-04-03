@@ -1,4 +1,4 @@
-import { Controller, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { RatingService } from './rating.service';
@@ -15,7 +15,7 @@ export class RatingController {
 
   @Post()
   @ApiOperation({ summary: '用户评分' })
-  create(@authUser() User: User, @Query() createRatingDto: CreateRatingDto) {
+  create(@authUser() User: User, @Body() createRatingDto: CreateRatingDto) {
     return this.ratingService.create(User, createRatingDto);
   }
 }

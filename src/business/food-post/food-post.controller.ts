@@ -63,8 +63,8 @@ export class FoodPostController {
 
   @Get('one/:id')
   @ApiOperation({ summary: '获取美食详情' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.foodPostService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) id: number, @authUser() User) {
+    return this.foodPostService.findOne(User, id);
   }
 
   @Post('/user')

@@ -157,7 +157,7 @@ export class FoodPostService {
    * @param {number} id - 美食分享id
    * @returns
    */
-  async findOne(Fid: number) {
+  async findOne(user: User, Fid: number) {
     const queryBuilder = this.foodPost.createQueryBuilder('foodPost');
     try {
       queryBuilder
@@ -168,7 +168,8 @@ export class FoodPostService {
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       foodPost.imageList = JSON.parse(foodPost.imageList);
       const { id, avatar, username } = foodPost.user;
-      foodPost.user = { id, avatar, username } as User;
+      const isFollow = await this.followService.isFollow(user.id, id);
+      foodPost.user = { id, avatar, username, isFollow } as unknown as User;
       return {
         data: foodPost,
         message: '查询成功',
