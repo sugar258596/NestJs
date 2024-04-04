@@ -61,6 +61,13 @@ export class SearchFoodPostDto {
   title: string;
 
   @ApiProperty({
+    example: '蔬菜类',
+    description: '类型',
+    required: false,
+  })
+  type: string[];
+
+  @ApiProperty({
     example: 0,
     description: '页码',
     required: false,

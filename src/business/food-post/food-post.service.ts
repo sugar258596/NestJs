@@ -27,6 +27,7 @@ export class FoodPostService {
    * @param {FileList} files - 上传文件
    * @param {object} createFoodPostDto - 创建美食的参数
    * @param {string} createFoodPostDto.title - 标题
+   * @param {string[]} createFoodPostDto.type - 类型
    * @param {string} createFoodPostDto.description - 描述
    * @param {string} createFoodPostDto.imageList - 图片
    * @param {User} user - 用户
@@ -40,12 +41,12 @@ export class FoodPostService {
     try {
       const foodPost = new FoodPost();
       const { data } = this.UploadService.multiple(files);
-
+      createFoodPostDto.type = JSON.stringify(
+        createFoodPostDto.type.split(','),
+      );
       Object.assign(foodPost, createFoodPostDto);
-
       foodPost.user = user;
       foodPost.imageList = JSON.stringify(data);
-
       await this.foodPost.save(foodPost);
 
       return {
@@ -68,17 +69,34 @@ export class FoodPostService {
    * @returns {Promise<{ data, message }> } 返回查询的美食分享
    */
   async findAll(user: User, SearchFoodPostDto: SearchFoodPostDto) {
-    const { title, page, pageSize } = SearchFoodPostDto;
+    const { title, page, pageSize, type } = SearchFoodPostDto;
     const queryBuilder = this.foodPost.createQueryBuilder('foodPost');
     try {
-      title
-        ? queryBuilder.where({ title: Like(`%${title}%`) }).where({ status: 1 })
-        : queryBuilder.where('foodPost.title IS NOT NULL').where({ status: 1 });
+      title || type
+        ? queryBuilder
+            .where((qb) => {
+              if (title && type) {
+                qb.where({
+                  title: Like(`%${title}%`),
+                }).orWhere({
+                  type: Like(`%${type}%`),
+                });
+              } else if (title) {
+                qb.where({ title: Like(`%${title}%`) });
+              } else if (type) {
+                qb.orWhere({ type: Like(`%${type}%`) });
+              }
+            })
+            .andWhere({ status: 1 })
+        : queryBuilder
+            .where('foodPost.title IS NOT NULL')
+            .andWhere({ status: 1 });
 
       queryBuilder
         .skip(page)
         .take(pageSize)
         .orderBy('foodPost.updatedAt', 'DESC')
+        .orderBy('foodPost.ratingAverage', 'DESC')
         .leftJoinAndSelect('foodPost.user', 'user');
       const [List, length] = await queryBuilder.getManyAndCount();
 
@@ -86,6 +104,7 @@ export class FoodPostService {
       await Promise.all(
         List.map(async (item) => {
           item.imageList = JSON.parse(item.imageList);
+          item.type = JSON.parse(item.type);
           const { id, avatar, username } = item.user;
           const isFollow = await this.followService.isFollow(user.id, id);
           item.user = { id, avatar, username, isFollow } as unknown as User;
@@ -97,8 +116,6 @@ export class FoodPostService {
         message: '查询成功',
       };
     } catch (err) {
-      console.log(err);
-
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
     }
   }
@@ -167,6 +184,7 @@ export class FoodPostService {
       if (!foodPost)
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
       foodPost.imageList = JSON.parse(foodPost.imageList);
+      foodPost.type = JSON.parse(foodPost.type);
       const { id, avatar, username } = foodPost.user;
       const isFollow = await this.followService.isFollow(user.id, id);
       foodPost.user = { id, avatar, username, isFollow } as unknown as User;
@@ -208,6 +226,8 @@ export class FoodPostService {
       // 将查询到的图片地址转换为数组
       List.forEach((item) => {
         item.imageList = JSON.parse(item.imageList);
+        item.type = JSON.parse(item.type);
+
         const { id, avatar, username } = item.user;
         item.user = { id, avatar, username } as User;
       });

@@ -8,7 +8,7 @@ export const jwtConstants = {
 export const whitelist = ['login', 'register', 'logOut'];
 
 // 需要验证的 GET 接口
-export const Blacklist = ['userInfo'];
+export const Blacklist = ['userInfo', 'food-post'];
 
 export const ShortMessage = {
   appid: '1400187558', // 短信应用SDK
