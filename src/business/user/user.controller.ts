@@ -21,9 +21,9 @@ import {
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto, SearchUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdataPasswordDto, UpdateUserDto } from './dto/update-user.dto';
 import { ImageUploadDecorator } from 'src/decorator/upload.decorator';
-import { getPagination } from 'src/decorator/auth.decorator';
+import { authUser, getPagination } from 'src/decorator/auth.decorator';
 
 @Controller('user')
 @ApiTags('user')
@@ -73,5 +73,14 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'User not found' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.userService.remove(+id);
+  }
+
+  // 当前用户修改密码
+  @Patch('password')
+  @ApiOperation({ summary: '修改密码' })
+  @ApiParam({ name: 'id', type: Number, description: '用户id' }) // 定义查询参数
+  @ApiBody({ type: CreateUserDto })
+  updatePassword(@authUser() user, @Body() updateUserDto: UpdataPasswordDto) {
+    return this.userService.updatePassword(user, updateUserDto);
   }
 }

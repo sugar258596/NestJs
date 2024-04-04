@@ -49,3 +49,14 @@ export class UpdataPagingDto extends PartialType(pagingDto) {
   })
   pageSize: number;
 }
+
+// 修改密码的参数
+export class UpdataPasswordDto {
+  @IsString()
+  @IsNotEmpty({ message: '密码不能为空' })
+  password: string;
+
+  @IsString()
+  @IsNotEmpty({ message: '新密码不能为空' })
+  newPassword: string;
+}

@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { SearchUserDto, pagingDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto, UpdataPasswordDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository, Like } from 'typeorm';
@@ -69,12 +69,12 @@ export class UserService {
   }
 
   /**
-   * @description 数据更新的方法
+   * @description  管理员数据更新的方法
    * @param {number} id 用户id
    * @param {UpdateUserDto} updateUserDto 用户信息
-   * @param {string} updateUserDto.name 用户信息
-   * @param {string} updateUserDto.password 用户信息
-   * @param {string} updateUserDto.Email 用户信息
+   * @param {string} updateUserDto.name 用户名
+   * @param {string} updateUserDto.password 用户密码
+   * @param {string} updateUserDto.Email 用户Email
    * @param {Express.Multer.File} file 用户头像
    * @returns
    */
@@ -196,12 +196,12 @@ export class UserService {
   }
 
   /**
-   * @description  user表添加数据的方法
-   * @param data 添加的数据
+   * @description 注册的时候添加数据的方法
+   * @param  {user} data 用户信息
    * @param message 提示信息
    */
 
-  async AddMethod(data: any, message?: string) {
+  async AddMethod(data: User, message?: string) {
     const { password } = data;
     try {
       data.password = await bcrypt.hash(password, 10);
@@ -229,6 +229,38 @@ export class UserService {
       };
     } catch (err) {
       throw new HttpException('查询失败', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * @description - 当前用户修改密码
+   * @param {User} userInfo 当前用户信息
+   * @param {UpdataPasswordDto} UpdataPasswordDto 修改密码的参数
+   * @param {string} UpdataPasswordDto.password 旧密码
+   * @param {string} UpdataPasswordDto.newPassword 新密码
+   * @returns
+   */
+  async updatePassword(userInfo: User, UpdataPasswordDto: UpdataPasswordDto) {
+    const { password, newPassword } = UpdataPasswordDto;
+    try {
+      const user = await this.user
+        .createQueryBuilder('user')
+        .where('user.id = :id', { id: userInfo.id })
+        .addSelect('user.password')
+        .getOne();
+
+      if (!user) throw new HttpException('用户不存在', HttpStatus.BAD_REQUEST);
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid)
+        throw new HttpException('密码错误', HttpStatus.BAD_REQUEST);
+      user.password = await bcrypt.hash(newPassword, 10);
+      await this.user.save(user);
+      return {
+        message: '密码修改成功',
+      };
+    } catch (err) {
+      throw new HttpException('密码修改失败', HttpStatus.BAD_REQUEST);
     }
   }
 }
