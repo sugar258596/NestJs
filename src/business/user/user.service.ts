@@ -1,6 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { SearchUserDto, pagingDto } from './dto/create-user.dto';
-import { UpdateUserDto, UpdataPasswordDto } from './dto/update-user.dto';
+import {
+  UpdateUserDto,
+  UpdataPasswordDto,
+  UpdataUserDto,
+} from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository, Like } from 'typeorm';
@@ -261,6 +265,84 @@ export class UserService {
       };
     } catch (err) {
       throw new HttpException('密码修改失败', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * @description - 当前用户修改头像
+   * @param {User} userInfo  当前用户信息
+   * @param {Express.Multer.File} file 上传的文件
+   * @returns
+   */
+  async updateAvatarUser(userInfo: User, file: Express.Multer.File) {
+    console.log(userInfo, file);
+
+    try {
+      const { data } = this.UploadService.create(file);
+      if (!data.url)
+        throw new HttpException('上传失败', HttpStatus.BAD_REQUEST);
+      const { affected } = await this.user.update(
+        { id: userInfo.id },
+        { avatar: data.url },
+      );
+      if (affected == 0)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
+      return {
+        data,
+        message: '更改头像成功',
+      };
+    } catch (err) {
+      throw new HttpException(
+        err.response || '更改头像失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  //当前用户修改基本信息
+  async updateInfo(userInfo: User, updateUserDto: UpdataUserDto) {
+    const { username, Email } = updateUserDto;
+    try {
+      // 假如都没有传值
+      if (!username && !Email)
+        throw new HttpException('不能修改空数据', HttpStatus.NOT_FOUND);
+
+      const user = await this.createMethod(username);
+
+      if (user && user.id !== userInfo.id)
+        throw new HttpException('用户已存在', HttpStatus.FORBIDDEN);
+
+      // 准备要更新的字段
+      const updateFields = {};
+
+      // 判断是否有用户名
+      if (username) {
+        updateFields['username'] = username;
+      }
+
+      // 判断是否有邮箱
+      if (Email) {
+        updateFields['Email'] = Email;
+      }
+
+      const { affected } = await this.user.update(
+        { id: userInfo.id },
+        updateFields,
+      );
+
+      if (affected == 0)
+        throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
+      return {
+        data: {
+          length: affected,
+        },
+        message: '数据修改成功',
+      };
+    } catch (err) {
+      throw new HttpException(
+        err.response || '数据修改失败',
+        err.status || HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

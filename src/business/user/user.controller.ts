@@ -21,7 +21,11 @@ import {
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto, SearchUserDto } from './dto/create-user.dto';
-import { UpdataPasswordDto, UpdateUserDto } from './dto/update-user.dto';
+import {
+  UpdataPasswordDto,
+  UpdataUserDto,
+  UpdateUserDto,
+} from './dto/update-user.dto';
 import { ImageUploadDecorator } from 'src/decorator/upload.decorator';
 import { authUser, getPagination } from 'src/decorator/auth.decorator';
 
@@ -82,5 +86,24 @@ export class UserController {
   @ApiBody({ type: CreateUserDto })
   updatePassword(@authUser() user, @Body() updateUserDto: UpdataPasswordDto) {
     return this.userService.updatePassword(user, updateUserDto);
+  }
+
+  // 当前用户修改头像
+  @Post('avatar')
+  @ApiOperation({ summary: '当前用户修改头像' })
+  @ImageUploadDecorator('/images/avatar', 'avatar')
+  updateAvatarSelf(
+    @authUser() user,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.userService.updateAvatarUser(user, file);
+  }
+
+  // 修改用户信息
+  @Patch('info')
+  @ApiOperation({ summary: '修改用户信息' })
+  @ApiBody({ type: UpdataUserDto })
+  updateInfo(@authUser() user, @Body() updateUserDto: UpdataUserDto) {
+    return this.userService.updateInfo(user, updateUserDto);
   }
 }
