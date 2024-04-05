@@ -275,10 +275,12 @@ export class FoodPostService {
    */
   async updateFoodPost(id: number, updateFoodPostDto: UpdateFoodPostDto) {
     updateFoodPostDto.imageList = JSON.stringify(updateFoodPostDto.imageList);
+    const { totalRating, ratingCount } = updateFoodPostDto;
+
     try {
       const { affected } = await this.foodPost.update(
         { id },
-        updateFoodPostDto,
+        { totalRating, ratingCount },
       );
       if (!affected)
         throw new HttpException('未找到相应数据', HttpStatus.NOT_FOUND);
