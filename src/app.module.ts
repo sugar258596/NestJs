@@ -7,7 +7,6 @@ import { FoodPostModule } from './business/food-post/food-post.module';
 import { UserFavoriteModule } from './business/user-favorite/user-favorite.module';
 import { FollowModule } from './business/follow/follow.module';
 import { CommentModule } from './business/comment/comment.module';
-import { ContentReviewModule } from './business/content-review/content-review.module';
 import { ReplyModule } from './business/reply/reply.module';
 import { RatingModule } from './business/rating/rating.module';
 
@@ -33,7 +32,6 @@ import * as fs from 'fs';
     UserFavoriteModule,
     FollowModule,
     CommentModule,
-    ContentReviewModule,
     ReplyModule,
     RatingModule,
     TypeOrmModule.forRootAsync({

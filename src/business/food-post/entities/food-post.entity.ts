@@ -10,10 +10,8 @@ import {
 } from 'typeorm';
 
 import { User } from 'src/business/user/entities/user.entity';
-import { ContentReview } from 'src/business/content-review/entities/content-review.entity';
 import { Reply } from 'src/business/reply/entities/reply.entity';
 import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.entity';
-import { Follow } from 'src/business/follow/entities/follow.entity';
 import { Comment } from 'src/business/comment/entities/comment.entity';
 import { Static } from 'src/enum/SQL';
 import { Rating } from 'src/business/rating/entities/rating.entity';
@@ -113,8 +111,4 @@ export class FoodPost {
   //一对多关系：一个美食分享可以有多个评分
   @OneToMany(() => Rating, (rating) => rating.foodPost)
   ratings: Rating[];
-
-  // 一对多关系：一个美食分享可以有多个审核记录
-  @OneToMany(() => ContentReview, (review) => review.foodPost)
-  reviews: ContentReview[];
 }

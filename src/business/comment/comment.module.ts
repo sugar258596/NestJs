@@ -6,7 +6,6 @@ import { Comment } from './entities/comment.entity';
 
 import { User } from '../user/entities/user.entity';
 import { FoodPost } from '../food-post/entities/food-post.entity';
-import { ContentReview } from '../content-review/entities/content-review.entity';
 import { Reply } from '../reply/entities/reply.entity';
 
 import { FoodPostService } from '../food-post/food-post.service';
@@ -17,16 +16,7 @@ import { FollowService } from '../follow/follow.service';
 import { Follow } from '../follow/entities/follow.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      Comment,
-      User,
-      FoodPost,
-      ContentReview,
-      Reply,
-      Follow,
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([Comment, User, FoodPost, Reply, Follow])],
   controllers: [CommentController],
   providers: [
     CommentService,

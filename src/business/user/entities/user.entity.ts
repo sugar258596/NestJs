@@ -9,7 +9,6 @@ import {
 
 import { Static, RoleEnum } from '../../../enum/SQL';
 
-import { ContentReview } from 'src/business/content-review/entities/content-review.entity';
 import { Reply } from 'src/business/reply/entities/reply.entity';
 import { Comment } from 'src/business/comment/entities/comment.entity';
 import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.entity';
@@ -121,10 +120,6 @@ export class User {
   // 一对多关系：一个用户可以回复多个评论
   @OneToMany(() => Reply, (reply) => reply.user)
   replies: Reply[];
-
-  // 一对多关系：一个管理员可以审核多个内容
-  @OneToMany(() => ContentReview, (review) => review.admin)
-  reviews: ContentReview[];
 
   // 一对多关系：一个用户可以有多个评分
   @OneToMany(() => Rating, (rating) => rating.user)
