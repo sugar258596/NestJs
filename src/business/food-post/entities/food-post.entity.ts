@@ -20,7 +20,9 @@ import { Rating } from 'src/business/rating/entities/rating.entity';
 @Entity()
 export class FoodPost {
   // 主键，自动生成
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    comment: 'id',
+  })
   id: number;
 
   @Column({
@@ -28,40 +30,34 @@ export class FoodPost {
   })
   title: string;
 
-  // 描述
   @Column({
     comment: '描述',
   })
   description: string;
 
-  // 图片链接
   @Column({
     comment: '图片地址',
     length: 6000,
   })
   imageList: string;
 
-  // 美食分享类型
   @Column({
     comment: '美食分享类型',
   })
   type: string;
 
-  // 总评分
   @Column({
     comment: '总评分',
     default: 0,
   })
   totalRating: number;
 
-  // 评分次数
   @Column({
     comment: '评分次数',
     default: 0,
   })
   ratingCount: number;
 
-  // 评分平均值
   @Column({
     comment: '评分平均值',
     default: 0,
@@ -75,7 +71,6 @@ export class FoodPost {
       this.ratingCount > 0 ? this.totalRating / this.ratingCount : 0;
   }
 
-  // 状态
   @Column({
     type: 'enum',
     comment: '状态',
@@ -84,11 +79,9 @@ export class FoodPost {
   })
   status: number;
 
-  // 创建时间
   @CreateDateColumn()
   createdAt: Date;
 
-  // 更新时间
   @UpdateDateColumn()
   updatedAt: Date;
 

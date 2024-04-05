@@ -12,11 +12,15 @@ import { FoodPost } from 'src/business/food-post/entities/food-post.entity';
 @Entity()
 export class Follow {
   // 主键，自动生成
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    comment: 'id',
+  })
   id: number;
 
-  // 创建时间
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamp',
+    comment: '创建时间',
+  })
   createdAt: Date;
 
   // 关注者

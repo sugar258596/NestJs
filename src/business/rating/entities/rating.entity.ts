@@ -11,11 +11,16 @@ import { FoodPost } from 'src/business/food-post/entities/food-post.entity';
 @Entity()
 @Unique(['user', 'foodPost'])
 export class Rating {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    comment: 'id',
+  })
   id: number;
 
-  @Column()
-  value: number; // 评分值
+  @Column({
+    type: 'float',
+    comment: '评分值',
+  })
+  value: number;
 
   // // 评分用户
   @ManyToOne(() => User, (user) => user.ratings)

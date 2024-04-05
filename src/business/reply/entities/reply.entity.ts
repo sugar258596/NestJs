@@ -15,19 +15,28 @@ import { Comment } from 'src/business/comment/entities/comment.entity';
 @Entity()
 export class Reply {
   // 主键，自动生成
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    comment: 'id',
+  })
   id: number;
 
-  // 内容
-  @Column()
+  @Column({
+    comment: '内容',
+  })
   content: string;
 
   // 创建时间
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamp',
+    comment: '创建时间',
+  })
   createdAt: Date;
 
   // 更新时间
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    comment: '更新时间',
+  })
   updatedAt: Date;
 
   // 多对一关系：回复的用户

@@ -16,7 +16,9 @@ import { Reply } from 'src/business/reply/entities/reply.entity';
 @Entity()
 export class Comment {
   // 主键，自动生成
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    comment: 'id',
+  })
   id: number;
 
   @Column({
@@ -25,11 +27,17 @@ export class Comment {
   content: string;
 
   // 创建时间
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamp',
+    comment: '创建时间',
+  })
   createdAt: Date;
 
   // 更新时间
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    comment: '更新时间',
+  })
   updatedAt: Date;
 
   // 多对一关系：多个评论属于同一个用户
