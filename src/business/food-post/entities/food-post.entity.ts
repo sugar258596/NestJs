@@ -10,8 +10,6 @@ import {
 } from 'typeorm';
 
 import { User } from 'src/business/user/entities/user.entity';
-import { Reply } from 'src/business/reply/entities/reply.entity';
-import { Comment } from 'src/business/comment/entities/comment.entity';
 import { Static } from 'src/enum/SQL';
 import { Rating } from 'src/business/rating/entities/rating.entity';
 
@@ -87,14 +85,6 @@ export class FoodPost {
   // 多对一关系：多个美食分享属于同一个用户
   @ManyToOne(() => User, (user) => user.foodPosts)
   user: User;
-
-  // 一对多关系：一个美食分享可以有多个评论
-  @OneToMany(() => Comment, (comment) => comment.foodPost)
-  comments: Comment[];
-
-  // 一对多关系：一个美食分享可以有多个回复
-  @OneToMany(() => Reply, (reply) => reply.comments)
-  replies: Reply[];
 
   //一对多关系：一个美食分享可以有多个评分
   @OneToMany(() => Rating, (rating) => rating.foodPost)

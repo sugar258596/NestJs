@@ -5,9 +5,8 @@ import { getDatabaseConfigAsync } from './mysql/mysl.config';
 import { UserModule } from './business/user/user.module';
 import { FoodPostModule } from './business/food-post/food-post.module';
 import { FollowModule } from './business/follow/follow.module';
-import { CommentModule } from './business/comment/comment.module';
-import { ReplyModule } from './business/reply/reply.module';
 import { RatingModule } from './business/rating/rating.module';
+import { ReviewModule } from './business/review/review.module';
 
 import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE, APP_GUARD } from '@nestjs/core';
 import { Response } from './common/response.interceptor';
@@ -29,9 +28,8 @@ import * as fs from 'fs';
     UserModule,
     FoodPostModule,
     FollowModule,
-    CommentModule,
-    ReplyModule,
     RatingModule,
+    ReviewModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) =>
