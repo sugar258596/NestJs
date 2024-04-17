@@ -4,7 +4,6 @@ import { getDatabaseConfigAsync } from './mysql/mysl.config';
 
 import { UserModule } from './business/user/user.module';
 import { FoodPostModule } from './business/food-post/food-post.module';
-import { UserFavoriteModule } from './business/user-favorite/user-favorite.module';
 import { FollowModule } from './business/follow/follow.module';
 import { CommentModule } from './business/comment/comment.module';
 import { ReplyModule } from './business/reply/reply.module';
@@ -29,7 +28,6 @@ import * as fs from 'fs';
     UploadModule,
     UserModule,
     FoodPostModule,
-    UserFavoriteModule,
     FollowModule,
     CommentModule,
     ReplyModule,

@@ -11,7 +11,6 @@ import { Static, RoleEnum } from '../../../enum/SQL';
 
 import { Reply } from 'src/business/reply/entities/reply.entity';
 import { Comment } from 'src/business/comment/entities/comment.entity';
-import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.entity';
 import { Follow } from 'src/business/follow/entities/follow.entity';
 import { FoodPost } from 'src/business/food-post/entities/food-post.entity';
 import { Rating } from 'src/business/rating/entities/rating.entity';
@@ -112,10 +111,6 @@ export class User {
   // 一对多关系：一个用户可以被多个用户关注
   @OneToMany(() => Follow, (like) => like.follower)
   followers: Follow[];
-
-  // 一对多关系：一个用户可以收藏多个美食分享
-  @OneToMany(() => UserFavorite, (favorite) => favorite.user)
-  favorites: UserFavorite[];
 
   // 一对多关系：一个用户可以回复多个评论
   @OneToMany(() => Reply, (reply) => reply.user)

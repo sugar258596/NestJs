@@ -11,7 +11,6 @@ import {
 
 import { User } from 'src/business/user/entities/user.entity';
 import { Reply } from 'src/business/reply/entities/reply.entity';
-import { UserFavorite } from 'src/business/user-favorite/entities/user-favorite.entity';
 import { Comment } from 'src/business/comment/entities/comment.entity';
 import { Static } from 'src/enum/SQL';
 import { Rating } from 'src/business/rating/entities/rating.entity';
@@ -92,10 +91,6 @@ export class FoodPost {
   // 一对多关系：一个美食分享可以有多个评论
   @OneToMany(() => Comment, (comment) => comment.foodPost)
   comments: Comment[];
-
-  // 一对多关系：一个美食分享可以被多个用户收藏
-  @OneToMany(() => UserFavorite, (favorite) => favorite.foodPost)
-  favorites: UserFavorite[];
 
   // 一对多关系：一个美食分享可以有多个回复
   @OneToMany(() => Reply, (reply) => reply.comments)
