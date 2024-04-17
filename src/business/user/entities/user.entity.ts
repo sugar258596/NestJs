@@ -85,4 +85,8 @@ export class User {
   // 一对多关系：一个用户可以被多个用户关注
   @OneToMany(() => Follow, (like) => like.follower)
   followers: Follow[];
+
+  // 一对多关系：一个用户可以有多个评分
+  @OneToMany(() => Rating, (rating) => rating.user)
+  ratings: Rating[];
 }

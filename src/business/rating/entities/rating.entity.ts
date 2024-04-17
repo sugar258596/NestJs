@@ -22,7 +22,7 @@ export class Rating {
   })
   value: number;
 
-  // // 评分用户
+  //   评分用户
   @ManyToOne(() => User, (user) => user.ratings)
   user: User;
 
