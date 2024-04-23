@@ -89,4 +89,8 @@ export class User {
   // 一对多关系：一个用户可以有多个评分
   @OneToMany(() => Rating, (rating) => rating.user)
   ratings: Rating[];
+
+  // 一对多关系：一个用户可以有多个评论
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
 }

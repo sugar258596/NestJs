@@ -12,6 +12,7 @@ import {
 import { User } from 'src/business/user/entities/user.entity';
 import { Static } from 'src/enum/SQL';
 import { Rating } from 'src/business/rating/entities/rating.entity';
+import { Review } from '@/business/review/entities/review.entity';
 
 // 美食分享表
 @Entity()
@@ -85,6 +86,10 @@ export class FoodPost {
   // 多对一关系：多个美食分享属于同一个用户
   @ManyToOne(() => User, (user) => user.foodPosts)
   user: User;
+
+  // 一对多关系：一个美食分享可以有多个评论
+  @OneToMany(() => Review, (review) => review.foodPost)
+  reviews: Review[];
 
   //一对多关系：一个美食分享可以有多个评分
   @OneToMany(() => Rating, (rating) => rating.foodPost)

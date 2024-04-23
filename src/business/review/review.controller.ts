@@ -1,34 +1,52 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Delete,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+
 import { ReviewService } from './review.service';
-import { CreateReviewDto } from './dto/create-review.dto';
+import {
+  CreateReviewDto,
+  GetReviewDto,
+  GetSubReviewDto,
+} from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 
+import { authUser, getPagination } from '@/decorator/auth.decorator';
+
 @Controller('review')
+@ApiTags('评论')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
-    return this.reviewService.create(createReviewDto);
+  @Post('/add')
+  @ApiBody({ type: CreateReviewDto })
+  @ApiOperation({ summary: '添加评论' })
+  create(@Body() createReviewDto: CreateReviewDto, @authUser() user) {
+    return this.reviewService.addReview(createReviewDto, user);
   }
 
-  @Get()
-  findAll() {
-    return this.reviewService.findAll();
+  @Get('/get')
+  @ApiOperation({ summary: '获取评论' })
+  @ApiQuery({ type: GetReviewDto })
+  findReview(@getPagination() getReviewDto: GetReviewDto) {
+    return this.reviewService.findReview(getReviewDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reviewService.findOne(+id);
+  @ApiOperation({ summary: '获取顶级评论，下面的子评论' })
+  @Get('/getReview')
+  getReview(@getPagination() GetSubReviewDto: GetSubReviewDto) {
+    return this.reviewService.findOneReview(GetSubReviewDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewService.update(+id, updateReviewDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reviewService.remove(+id);
+  @ApiOperation({ summary: '删除评论' })
+  @Delete('/delete/:id')
+  delete(@Param('id', ParseIntPipe) id: number, @authUser() user) {
+    return this.reviewService.deleteReview(id, user);
   }
 }
