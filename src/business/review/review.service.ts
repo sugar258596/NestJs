@@ -34,24 +34,28 @@ export class ReviewService {
    * @returns
    */
   async addReview(createReviewDto: CreateReviewDto, user: User) {
-    const review = new Review();
-    const { foodPostId, parentId } = createReviewDto;
+    const { id, parentId } = createReviewDto;
+    const review = new Review() as any;
+    review.content = createReviewDto.content;
+    review.foreignKey = createReviewDto.foreignKey;
+    review.foreignName = createReviewDto.foreignName;
+    review.foodPostId = id;
     try {
-      Object.assign(review, createReviewDto);
-      const { data } = await this.FoodPostService.findOne(user, foodPostId);
+      const { data } = await this.FoodPostService.findOne(user, id);
       review.foodPost = data;
       review.user = user;
 
-      return this.review.manager.transaction(async (manager) => {
+      return await this.review.manager.transaction(async (manager) => {
         if (parentId) {
           const parentReview = await manager.findOne(Review, {
             where: { id: parentId },
           });
+          review.parentId = parentId;
           review.isTop = false;
           parentReview.messageCount++;
-          manager.save(Review, parentReview);
+          await manager.save(Review, parentReview);
         }
-        await this.review.save(review);
+        await manager.save(review);
         return {
           message: '评论成功,等待审核~',
         };

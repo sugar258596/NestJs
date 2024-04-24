@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateReviewDto {
   @ApiProperty({ description: '文章id', required: true })
-  foodPostId: number;
+  id: number;
   @ApiProperty({ description: '评论内容', required: true })
-  content: number;
+  content: string;
   @ApiProperty({ description: '是否为顶层评论' })
   isTop: boolean;
   @ApiProperty({ description: '顶层评论id' })

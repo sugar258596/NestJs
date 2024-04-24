@@ -39,7 +39,7 @@ export class ReviewController {
   }
 
   @ApiOperation({ summary: '获取顶级评论，下面的子评论' })
-  @Get('/getReview')
+  @Get('/getSub')
   getReview(@getPagination() GetSubReviewDto: GetSubReviewDto) {
     return this.reviewService.findOneReview(GetSubReviewDto);
   }
