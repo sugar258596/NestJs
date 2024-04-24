@@ -34,12 +34,13 @@ export class ReviewService {
    * @returns
    */
   async addReview(createReviewDto: CreateReviewDto, user: User) {
-    const { id, parentId } = createReviewDto;
+    // const { foodPostId, parentId } = createReviewDto;
+    const { id, parentId, foreignKey, foreignName, content } = createReviewDto;
     const review = new Review() as any;
-    review.content = createReviewDto.content;
-    review.foreignKey = createReviewDto.foreignKey;
-    review.foreignName = createReviewDto.foreignName;
-    review.foodPostId = id;
+    review.content = content;
+    review.foreignKey = foreignKey;
+    review.foreignName = foreignName;
+
     try {
       const { data } = await this.FoodPostService.findOne(user, id);
       review.foodPost = data;
@@ -50,15 +51,13 @@ export class ReviewService {
           const parentReview = await manager.findOne(Review, {
             where: { id: parentId },
           });
-          review.parentId = parentId;
           review.isTop = false;
+          review.parentId = parentId;
           parentReview.messageCount++;
           await manager.save(Review, parentReview);
         }
-        await manager.save(review);
-        return {
-          message: '评论成功,等待审核~',
-        };
+        await this.review.save(review);
+        return { message: '评论成功,等待审核~' };
       });
     } catch (err) {
       throw new HttpException(
