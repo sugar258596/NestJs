@@ -88,26 +88,26 @@ export class ReviewService {
         .leftJoinAndSelect('review.user', 'user')
         .getManyAndCount();
 
-      const sublevelsa = await this.review
-        .createQueryBuilder('review2')
-        .where('review2.foodPostId = :id', { id })
-        .andWhere({ isTop: false })
-        .leftJoinAndSelect('review2.user', 'user')
-        .take(3)
-        .getMany();
-
-      const allReview = topLevel.map((item: any) => {
-        item.replies = sublevelsa.filter((subitem) => {
-          subitem.user = this.filterUser(subitem.user);
-          return subitem.parentId === item.id;
-        });
-        item.user = this.filterUser(item.user);
-        return item;
-      });
+      await Promise.all(
+        topLevel.map(async (item: any) => {
+          // 过滤用户信息
+          item.user = this.filterUser(item.user);
+          const subReview = await this.review
+            .createQueryBuilder('review')
+            .where('review.parentId = :id', { id: item.id })
+            .leftJoinAndSelect('review.user', 'user')
+            .take(3)
+            .getMany();
+          item.replies = subReview.map((sub) => {
+            sub.user = this.filterUser(sub.user);
+            return sub;
+          });
+        }),
+      );
 
       return {
         data: {
-          List: allReview,
+          List: topLevel,
           length,
         },
         message: '获取评论成功',
