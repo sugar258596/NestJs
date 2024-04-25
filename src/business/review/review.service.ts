@@ -180,27 +180,6 @@ export class ReviewService {
         err.status || HttpStatus.BAD_REQUEST,
       );
     }
-
-    // try {
-    //   const review = await this.review
-    //     .createQueryBuilder('review')
-    //     .delete()
-    //     .from(Review)
-    //     .where('id = :id', { id })
-    //     .execute();
-    //   if (!review) {
-    //     throw new HttpException('评论不存在', HttpStatus.BAD_REQUEST);
-    //   }
-    //   await this.review.delete({ id });
-    //   return {
-    //     message: '删除成功',
-    //   };
-    // } catch (err) {
-    //   throw new HttpException(
-    //     err || '删除失败',
-    //     err.status || HttpStatus.BAD_REQUEST,
-    //   );
-    // }
   }
 
   /**
