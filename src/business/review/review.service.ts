@@ -16,6 +16,7 @@ import { FoodPostService } from '../food-post/food-post.service';
 
 @Injectable()
 export class ReviewService {
+  private readonly ITEMS_PER_PAGE = 3;
   constructor(
     @InjectRepository(Review) private readonly review: Repository<Review>,
     private readonly FoodPostService: FoodPostService,
@@ -96,7 +97,7 @@ export class ReviewService {
             .createQueryBuilder('review')
             .where('review.parentId = :id', { id: item.id })
             .leftJoinAndSelect('review.user', 'user')
-            .take(3)
+            .take(this.ITEMS_PER_PAGE)
             .getMany();
           item.replies = subReview.map((sub) => {
             sub.user = this.filterUser(sub.user);
@@ -130,12 +131,15 @@ export class ReviewService {
    */
   async findOneReview(GetSubReviewDto: GetSubReviewDto) {
     const { id, page, pageSize } = GetSubReviewDto;
+    const dotPage = page + this.ITEMS_PER_PAGE;
+    const dotPageSize = pageSize + this.ITEMS_PER_PAGE;
+
     const queryBuilder = this.review.createQueryBuilder('review');
     try {
       const [review, length] = await queryBuilder
         .where('review.parentId = :id', { id })
-        .skip(page)
-        .take(pageSize)
+        .skip(dotPage)
+        .take(dotPageSize)
         .getManyAndCount();
 
       return {
