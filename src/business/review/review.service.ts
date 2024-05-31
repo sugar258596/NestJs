@@ -140,7 +140,12 @@ export class ReviewService {
         .where('review.parentId = :id', { id })
         .skip(dotPage)
         .take(dotPageSize)
+        .leftJoinAndSelect('review.user', 'user')
         .getManyAndCount();
+
+      review.map((item) => {
+        item.user = this.filterUser(item.user);
+      });
 
       return {
         data: {
